@@ -1,6 +1,8 @@
 package bookHotel.dto;
 
+import lombok.Data;
 
+@Data
 // 응답할 데이터에서 필요한 정보 
 public class ResponseInfo {
 

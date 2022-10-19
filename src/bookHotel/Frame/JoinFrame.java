@@ -52,7 +52,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 	}
 
 	private void initData() {
-		setTitle("LogIn");
+		setTitle("SignIn");
 		setSize(600, 1300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
