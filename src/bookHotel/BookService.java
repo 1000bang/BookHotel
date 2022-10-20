@@ -45,7 +45,9 @@ public class BookService implements IBookService {
 			if (rs.next()) {
 				if (rs.getString(1).equals("master")) {
 					new MasterFrame();
+					loginFrame.dispose();
 				} else {
+					loginFrame.dispose();
 					new MainPageFrame();
 				}
 
@@ -172,89 +174,82 @@ public class BookService implements IBookService {
 			e.printStackTrace();
 
 		} finally {
-			try {
-				rs.close();
-				psmt.close();
-				dbHelper.connectionClose();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			closeAll();
 		}
 
 		return flag;
 	}
 
-	// 호텔 이름 수정
-	@Override
-	public boolean hotelNameUpdate(String oldHotelName, String changeName) {
+	// 호텔 이름 수정(한방 수정 만듬으로 인해 죽는 코드 확인후 삭제하기)
+//	@Override
+//	public boolean hotelNameUpdate(String oldHotelName, String changeName) {
+//
+//		boolean flag = false;
+//
+//		// 방어적 코드 실제 있는지 없는지
+//		String query1 = " select count(hotelNo) from hotel where hotelName  = ? limit 1 "; // 있으면 1 없으면 0 반환 쿼리
+//		int isNotEmpty = 0;
+//		try {
+//			dbHelper.getConnection().setAutoCommit(false);
+//			psmt = dbHelper.getConnection().prepareStatement(query1);
+//			psmt.setString(1, oldHotelName);
+//
+//			rs = psmt.executeQuery();
+//			while (rs.next()) {
+//				isNotEmpty = (rs.getInt("count(hotelNo)"));
+//				// TODO remove
+//				// System.out.println(" 1 있다 , 0 없다 :: " + isNotEmpty);
+//			}
+//
+//			// 만약 0 이면 잘못딘 값을 요청했습니다 ..
+//			if (isNotEmpty == 0) {
+//				flag = false;
+//			} else {
+//				//
+//				String query2 = " UPDATE hotel SET hotelName = ? WHERE hotelName = ? ";
+//				psmt = dbHelper.getConnection().prepareStatement(query2);
+//				psmt.setString(1, changeName);
+//				psmt.setString(2, oldHotelName);
+//				int rowCount = psmt.executeUpdate();
+//				if (rowCount >= 1) {
+//					flag = true;
+//				} else {
+//					flag = false;
+//				}
+//
+//			}
+//
+//			dbHelper.getConnection().commit();
+//			dbHelper.getConnection().setAutoCommit(true);
+//
+//		} catch (SQLException e) {
+//			try {
+//				dbHelper.getConnection().rollback();
+//			} catch (SQLException e1) {
+//				// TODO Auto-generated catch block
+//
+//				e1.printStackTrace();
+//			}
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				rs.close();
+//				psmt.close();
+//				dbHelper.connectionClose();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
+//
+//		}
+//
+//		return flag;
+//	}
 
-		boolean flag = false;
-
-		// 방어적 코드 실제 있는지 없는지
-		String query1 = " select count(hotelNo) from hotel where hotelName  = ? limit 1 "; // 있으면 1 없으면 0 반환 쿼리
-		int isNotEmpty = 0;
-		try {
-			dbHelper.getConnection().setAutoCommit(false);
-			psmt = dbHelper.getConnection().prepareStatement(query1);
-			psmt.setString(1, oldHotelName);
-
-			rs = psmt.executeQuery();
-			while (rs.next()) {
-				isNotEmpty = (rs.getInt("count(hotelNo)"));
-				// TODO remove
-				// System.out.println(" 1 있다 , 0 없다 :: " + isNotEmpty);
-			}
-
-			// 만약 0 이면 잘못딘 값을 요청했습니다 ..
-			if (isNotEmpty == 0) {
-				flag = false;
-			} else {
-				//
-				String query2 = " UPDATE hotel SET hotelName = ? WHERE hotelName = ? ";
-				psmt = dbHelper.getConnection().prepareStatement(query2);
-				psmt.setString(1, changeName);
-				psmt.setString(2, oldHotelName);
-				int rowCount = psmt.executeUpdate();
-				if (rowCount >= 1) {
-					flag = true;
-				} else {
-					flag = false;
-				}
-
-			}
-
-			dbHelper.getConnection().commit();
-			dbHelper.getConnection().setAutoCommit(true);
-
-		} catch (SQLException e) {
-			try {
-				dbHelper.getConnection().rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		} finally {
-			try {
-				rs.close();
-				psmt.close();
-				dbHelper.connectionClose();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-
-		return flag;
-	}
-
-	@Override
-	public boolean hotelAddressUpdate(String hotelName, String changeAddress) {
-
-		return false;
-	}
+//	@Override(삭제)
+//	public boolean hotelAddressUpdate(String hotelName, String changeAddress) {
+//
+//		return false;
+//	}
 
 	///
 
@@ -277,17 +272,9 @@ public class BookService implements IBookService {
 				JOptionPane.showMessageDialog(roomUpdateFrame, "일치하는 정보가 없습니다.");
 			}
 		} catch (SQLException e) {
-
 			e.printStackTrace();
 		} finally {
-			try {
-				rs.close();
-				psmt.close();
-				dbHelper.connectionClose();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			closeAll();
 		}
 
 	}
@@ -326,7 +313,6 @@ public class BookService implements IBookService {
 
 				dbHelper.getConnection().rollback();
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
@@ -335,11 +321,57 @@ public class BookService implements IBookService {
 		}
 
 	}
+	
+	@Override
+	public void updateHotel(String hotelNo, String newHotelName, String newAddress, String newTelPhone) {
+		
+		try {
+			dbHelper.getConnection().setAutoCommit(false);
+			
+			// 호텔 이름 수정
+			String query1 = " update hotel set hotelName = ?, 2Address = ?, telPhone = ? where hotelNo = ? ";
+			psmt = dbHelper.getConnection().prepareStatement(query1);
+			psmt.setString(1, newHotelName);
+			psmt.setString(2, newAddress);
+			psmt.setString(3, newTelPhone);
+			psmt.setString(4, hotelNo);
+			psmt.executeUpdate();
+			
+
+			// 호텔 주소 수정(코드를 줄일수 있음!!!!)
+//			String query2 = " update hotel set Address = ? where hotelNo = ? ";
+//			psmt = dbHelper.getConnection().prepareStatement(query2);
+//			psmt.setString(1, newAddress);
+//			psmt.setString(2, hotelNo);
+//			psmt.executeUpdate();
+//			
+//			
+//			// 호텔 전화번호 수정
+//			String query3 = " update hotel set telPhone = ? where hotelNo = ? ";
+//			psmt = dbHelper.getConnection().prepareStatement(query3);
+//			psmt.setString(1, newTelPhone);
+//			psmt.setString(2, hotelNo);
+//			psmt.executeUpdate();
+			
+			dbHelper.getConnection().commit(); // 실제 데이터 베이스에 반영
+			dbHelper.getConnection().setAutoCommit(true); // 오토커밋 원상태로 돌려놓는 것을 권장
+			
+		} catch (SQLException e) {
+			try {
+				dbHelper.getConnection().rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}// 
+	}
+
 
 	public static void main(String[] args) {
 		BookService bookService = new BookService();
 		ResquestInfo info = new ResquestInfo();
-
+		
+		
 		// 숙소 정보 입력
 //		info.setHotelName("테스트모텔1");
 //		info.setAddress("테스트구1");
@@ -364,16 +396,21 @@ public class BookService implements IBookService {
 		// 호텔 이름 수정하기
 //		info.hotelNameUpdate("갈색도트","브라운도트");
 
-		// 1. 테스트 코드
-		// 실행 테스트
-		// 변경하고자 하는 이름을 받고, 변경하고 싶은 이름을 받아야 한다.
-		// 호텔 이름 수정하기
-//		boolean result =  bookService.hotelNameUpdate("브라운도트" ,"갈색도트");
-//		System.out.println("result : " + result);
 
-		// 방 정보수정하기
-		//bookService.updateRoom("1", "101", "", null);
+		
+		
+		 bookService.updateHotel("4", "그냥", "1왜되지", "77-7777-7777");
+		
+		
+		// 호텔 이름 수정하기
+//		boolean result =  bookService.hotelNameUpdate("테스트모텔1" ,"안녕모텔");
+//		System.out.println("result : " + result);
+//		
+//		bookService.hotelNameUpdate("테스트모텔1" ,"안녕모텔");
+
+	
 
 	}
+
 
 }
