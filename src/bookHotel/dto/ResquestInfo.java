@@ -10,10 +10,13 @@ public class ResquestInfo {
 
 	private String userName; 
 	private String password;
+	private int userNo;
+	private String id;
+	private String userPhoneNumber;
+	private String userYear;
 	private int hotelNo;
 	private int roomNo;
 	private String reservationNo;
-	private int userNo;
 	private int roomId;
 	private Timestamp checkInDate;
 	private int reservationNumber;
@@ -22,10 +25,8 @@ public class ResquestInfo {
 	private int rating;
 	private String hotelName;
 	private int price;
-	private String id;
-	private String userPhoneNumber;
-	private String userYear;
 	private String address;
 	private String telPhone;
+	
 
 }

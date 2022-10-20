@@ -11,5 +11,8 @@ public class ResponseInfo {
 	 private String hotelNo;
 	 private String roomNo;
 	 private String reservationNo;
-	
+	 private String id;
+	 private String password;
+	 private String userPhoneNumber;
+	 private String userYear;
 }
