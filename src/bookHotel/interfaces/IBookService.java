@@ -3,6 +3,7 @@ package bookHotel.interfaces;
 import java.util.List;
 
 import bookHotel.Frame.LoginFrame;
+import bookHotel.Frame.RoomUpdateFrame;
 import bookHotel.dto.ResponseInfo;
 import bookHotel.dto.ResquestInfo;
 

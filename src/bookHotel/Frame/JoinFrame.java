@@ -24,15 +24,17 @@ import bookHotel.RoundedTextField;
 public class JoinFrame extends JFrame implements ActionListener {
 
 	private JLabel logo;
-	private JLabel idOrEmail;
+	private JLabel id;
 	private JLabel passWord;
 	private JLabel passWordCheck;
 	private JLabel name;
 	private JLabel phoneNumber;
 	private JLabel birth;
-	private JLabel warning;
-	private JLabel warningmsg;
-	
+	private JLabel warningId;
+	private JLabel warningPw;
+	private JLabel warningpwCheck;
+	private JLabel warningName;
+
 	private RoundedTextField idText;
 	private RoundedPass pwText;
 	private RoundedPass pwcheck;
@@ -52,26 +54,30 @@ public class JoinFrame extends JFrame implements ActionListener {
 	}
 
 	private void initData() {
-		setTitle("SignIn");
+		setTitle("LogIn");
 		setSize(600, 1300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		logo = new JLabel(new ImageIcon("images/logo.png"));
-		idOrEmail = new JLabel("아이디");
+		id = new JLabel("아이디");
 		passWord = new JLabel("비밀번호");
 		passWordCheck = new JLabel("비밀번호 확인");
 		name = new JLabel("이름");
 		phoneNumber = new JLabel("전화번호");
 		birth = new JLabel("생년월일");
-		warning = new JLabel("* 비밀번호는 5글자 이상 적어주세요");
-		warningmsg = new JLabel("* 비밀번호와 일치하는 문자를 적어주세요. ");
-		idText = new RoundedTextField("아이디를 5글자 이상 적어주세요 ");
-		nameText = new RoundedTextField("이름");
-		phoneNumberText = new RoundedTextField("전화번호");
-		birthText = new RoundedTextField("생년월일");
-		pwcheck = new RoundedPass("비밀번호를 5글자 이상 적어주세요");
-		pwText = new RoundedPass("비밀번호를 다시 적어주세요 ");
+
+		idText = new RoundedTextField(" ");
+		nameText = new RoundedTextField("");
+		phoneNumberText = new RoundedTextField("");
+		birthText = new RoundedTextField("");
+		pwcheck = new RoundedPass("");
+		pwText = new RoundedPass("");
 		join = new RoundedButton(" 회원가입");
+
+		warningId = new JLabel("* 아이디를 5글자 이상 적어주세요");
+		warningPw = new JLabel("* 비밀번호는 5글자 이상 적어주세요. ");
+		warningpwCheck = new JLabel("* 비밀번호와 일치하게 적어주세요. ");
+		warningName = new JLabel("* 이름을 필수 값입니다.  ");
 
 	}
 
@@ -83,7 +89,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 		this.getContentPane().add(logo);
 
 		// 컴포넌트 위치
-		setLabel(idOrEmail, 20, 150, 150, 20);
+		setLabel(id, 20, 150, 100, 20);
 		setLabel(passWord, 20, 230, 100, 20);
 		setLabel(passWordCheck, 20, 310, 100, 20);
 		setLabel(name, 20, 390, 100, 20);
@@ -114,13 +120,38 @@ public class JoinFrame extends JFrame implements ActionListener {
 			// 충족되면 insert & option 회원가입에 성공하셨습니다 !!!!
 			if (idText.getText().length() < 5) {
 				JOptionPane.showMessageDialog(this, "아이디가 너무 짧습니다.");
-			} else if (pwText.getText().length() < 5) {
-				JOptionPane.showMessageDialog(this, "비밀번호가 너무 짧습니다.");
-			} else if ((pwText.getText().equals(pwcheck.getText())) == false) {
-				JOptionPane.showMessageDialog(this, "비밀 번호가 일치하지 않습니다.");
+				warningId.setForeground(Color.red);
+				setLabel(warningId, 120, 150, 300, 20);
+			} else if (idText.getText().length() >= 5) {
+				warningId.setVisible(false);
+				if (pwText.getText().length() < 5) {
+					JOptionPane.showMessageDialog(this, "비밀번호가 너무 짧습니다.");
+					warningPw.setForeground(Color.red);
+					setLabel(warningPw, 120, 230, 300, 20);
+				} else if (pwText.getText().length() >= 5) {
+					warningPw.setVisible(false);
+					if ((pwText.getText().equals(pwcheck.getText())) == false) {
+						JOptionPane.showMessageDialog(this, "비밀 번호가 일치하지 않습니다.");
+						warningpwCheck.setForeground(Color.red);
+						setLabel(warningpwCheck, 120, 310, 300, 20);
+					} else if (((pwText.getText().equals(pwcheck.getText())) == true)) {
+						warningpwCheck.setVisible(false);
+						if (nameText.getText().equals("")) {
+							System.out.println("here");
+							JOptionPane.showMessageDialog(this, "이름을 입력하지 않았습니다.");
+							warningName.setForeground(Color.red);
+							setLabel(warningName, 120, 410, 300, 20);
+						} else if (nameText != null) {
+							warningName.setVisible(false);// 회원가입 완료
+							JOptionPane.showMessageDialog(this, "회원가입 완료.");
+							// insert 메서드 호 출
+							dispose();
+							new LoginFrame();
+						}
+					}
+				}
 			}
-
-		}
+		} // end of join if
 
 	}
 

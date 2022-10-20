@@ -107,6 +107,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 		*/
 		if (e.getSource() == logIn) {
 			bookService.selectLoginInfo(this);
+			
 		} else if (e.getSource() == join) {
 			dispose();
 			new JoinFrame();
@@ -124,6 +125,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
 	public static void main(String[] args) {
 		new LoginFrame();
+
 
 	}
 
