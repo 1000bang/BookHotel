@@ -42,17 +42,16 @@ public interface IBookService {
 	// 호텔 정보 수정하기
 	void updateHotel(String hotelNo, String newHotelName, String newAddress, String newTelPhone);
 	
-	// 객실 정보 수정하기
-	// 객실정보 삭제하기
-	// 에약자 조회
+	// 호텔 정보 삭제하기
+	void deleteHotel(int hotelNo);
 	
-	
-	
+	// 예약하다
+	void book(ResquestInfo req);
 	
 	void updateRoom(String roomId, String newDayPrice, String newNightPrice, String newRoomNo );
 
 	   
-	   void searchRoom(RoomUpdateFrame roomUpdateFrame);
+	void searchRoom(RoomUpdateFrame roomUpdateFrame);
 	
 }
 

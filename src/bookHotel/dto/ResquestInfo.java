@@ -24,7 +24,8 @@ public class ResquestInfo {
 	private String content;
 	private int rating;
 	private String hotelName;
-	private int price;
+	private int dayPrice;
+	private int nightPrice;
 	private String address;
 	private String telPhone;
 	

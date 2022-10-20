@@ -100,6 +100,8 @@ public class BookService implements IBookService {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	// Request : insert , update,
 	// Response : select
@@ -127,6 +129,74 @@ public class BookService implements IBookService {
 
 		return list;
 	}
+	
+	
+	@Override// 예약하기
+	public void book(ResquestInfo req) {
+		boolean flag = true;
+		
+		try {
+			dbHelper.getConnection().setAutoCommit(false);
+		
+			// 마지막 예약번호 가져오기
+			String query1 = " SELECT reservationNumber FROM reservation ORDER BY reservationNumber DESC LIMIT 1 ";
+			rs = dbHelper.getConnection().prepareStatement(query1).executeQuery();
+			while(rs.next()) {
+				int lastNo = (rs.getInt("reservationNumber"));
+				req.setReservationNumber(lastNo);
+				System.out.println("예약 마지막 No" + lastNo);
+			}
+			// 마지막 유저번호 가져오기
+//			String query2 = " SELECT userNo FROM userInfo ORDER BY userNo DESC LIMIT 1 ";
+//			rs = dbHelper.getConnection().prepareStatement(query2).executeQuery();
+//			while(rs.next()) {
+//				int lastNo = (rs.getInt("userNo"));
+//				req.setReservationNumber(lastNo);
+//				System.out.println("회원 마지막 No" + lastNo);
+//			}
+			
+			// 마지막 방Id 가져오기
+//			String query3 = " SELECT roomId FROM room ORDER BY roomId DESC LIMIT 1 ";
+//			rs = dbHelper.getConnection().prepareStatement(query3).executeQuery();
+//			while(rs.next()) {
+//				int lastNo = (rs.getInt("roomId"));
+//				req.setReservationNumber(lastNo);
+//				System.out.println("방 마지막 Id" + lastNo);
+//			}
+			
+			
+			// 호텔 선택
+			String query4 = "insert into reservation( hotelNo,roomNo, userNo, checkInData ) values " + " ( ?, ?, ?, ? ) ";
+			psmt = dbHelper.getConnection().prepareStatement(query4);
+			psmt.setInt(1, req.getHotelNo());
+			psmt.setInt(3, req.getRoomNo());
+			psmt.setInt(2, req.getUserNo());
+			psmt.setTimestamp(4, req.getCheckInDate());
+			psmt.executeUpdate();
+			
+			
+			
+
+			// 방 선택
+//			String query5 = " insert into room( roomNo ) values( ? ) ";
+//			psmt = dbHelper.getConnection().prepareStatement(query5);
+//			psmt.setInt(1, req.getRoomNo());
+//			psmt.executeUpdate();
+			
+			dbHelper.getConnection().commit(); // db에 반영 (테스트시 주석처리!!!)
+			dbHelper.getConnection().setAutoCommit(true); // 원상복구
+		} catch (SQLException e) {
+			try {
+				dbHelper.getConnection().rollback();
+				System.out.println("롤백했습니다.");
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}finally {
+			closeAll();
+		}
+	}
 
 	// 호텔 정보 저장하기 (트랜잭션)
 	@Override
@@ -153,16 +223,18 @@ public class BookService implements IBookService {
 			psmt.setString(3, req.getTelPhone());
 			psmt.executeUpdate();
 
-			String roomSql = " insert into room( roomNo, hotelNo, price ) values( ?, ?, ?) ";
+			String roomSql = " insert into room( roomNo, hotelNo, dayPrice, nightPrice) values( ?, ?, ?,?) ";
 
 			// 방 정보 저장하기
 			psmt = dbHelper.getConnection().prepareStatement(roomSql);
 			psmt.setInt(1, req.getRoomNo());
 			psmt.setInt(2, req.getHotelNo());
-			psmt.setInt(3, req.getPrice());
+			psmt.setInt(3, req.getDayPrice());
+			psmt.setInt(4, req.getNightPrice());
+			
 			psmt.executeUpdate();
 
-			// dbHelper.getConnection().commit(); // db에 반영 (테스트시 주석처리!!!)
+			 dbHelper.getConnection().commit(); // db에 반영 (테스트시 주석처리!!!)
 			dbHelper.getConnection().setAutoCommit(true); // 원상복구
 		} catch (SQLException e) {
 			try {
@@ -322,6 +394,7 @@ public class BookService implements IBookService {
 
 	}
 	
+	// 호텔 정보 한방 수정
 	@Override
 	public void updateHotel(String hotelNo, String newHotelName, String newAddress, String newTelPhone) {
 		
@@ -329,7 +402,7 @@ public class BookService implements IBookService {
 			dbHelper.getConnection().setAutoCommit(false);
 			
 			// 호텔 이름 수정
-			String query1 = " update hotel set hotelName = ?, 2Address = ?, telPhone = ? where hotelNo = ? ";
+			String query1 = " update hotel set hotelName = ?, Address = ?, telPhone = ? where hotelNo = ? ";
 			psmt = dbHelper.getConnection().prepareStatement(query1);
 			psmt.setString(1, newHotelName);
 			psmt.setString(2, newAddress);
@@ -363,7 +436,44 @@ public class BookService implements IBookService {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
-		}// 
+		}
+		
+	}
+	
+	@Override // 호텔번호(Pk)로 모든 테이블 호텔
+	public void deleteHotel(int hotelNo) {
+		
+		boolean flag = true;
+		try {
+			dbHelper.getConnection().setAutoCommit(false);
+			String query1 = " delete from reservation where hotelNo = ? "; // 예약
+			psmt = dbHelper.getConnection().prepareStatement(query1);
+			psmt.setInt(1, hotelNo);
+			psmt.executeUpdate();
+
+			
+			String query2 = " delete from room where hotelNo = ? "; // 방
+			psmt = dbHelper.getConnection().prepareStatement(query2);
+			psmt.setInt(1, hotelNo);
+			psmt.executeUpdate();
+			
+			String query3 = " delete from review where hotelNo = ? "; // 리뷰
+			psmt = dbHelper.getConnection().prepareStatement(query3);
+			psmt.setInt(1, hotelNo);
+			psmt.executeUpdate();
+			
+			String query4 = " delete from hotel where hotelNo = ? "; // 호텔
+			psmt = dbHelper.getConnection().prepareStatement(query4);
+			psmt.setInt(1, hotelNo);
+			psmt.executeUpdate();
+			
+			dbHelper.getConnection().commit();
+			dbHelper.getConnection().setAutoCommit(true);
+
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
 	}
 
 
@@ -373,15 +483,24 @@ public class BookService implements IBookService {
 		
 		
 		// 숙소 정보 입력
-//		info.setHotelName("테스트모텔1");
-//		info.setAddress("테스트구1");
-//		info.setTelPhone("121-1212-9999");
+//		info.setHotelName("테스트모텔102");
+//		info.setAddress("테스트구102");
+//		info.setTelPhone("1221-12212-9999");
 //		
 //		// 방정보 입력
-//		info.setRoomNo(102);
-//		info.setPrice(50000);
-//		bookService.insertHotelInfo(info);
+//		info.setRoomNo(12202);
+//		info.setDayPrice(5220000);
+//		info.setNightPrice(1520000);
 //		
+//		bookService.insertHotelInfo(info);
+		
+//		 hotelNo,roomNo, userNo, checkInData
+		info.setHotelNo(2);
+		info.setRoomNo(2);
+		info.setUserNo(1);
+		info.setCheckInDate(null);
+		bookService.book(info);
+////		
 
 //		System.out.println(bookService.selectAllUserInfo()); // 유저 정보 전체조회 확인하기
 
@@ -399,7 +518,9 @@ public class BookService implements IBookService {
 
 		
 		
-		 bookService.updateHotel("4", "그냥", "1왜되지", "77-7777-7777");
+//		 bookService.updateHotel("4", "그냥", "1왜되지", "77-7777-7777");
+		 
+//		bookService.deleteHotel(1);
 		
 		
 		// 호텔 이름 수정하기
@@ -411,6 +532,10 @@ public class BookService implements IBookService {
 	
 
 	}
+
+
+
+
 
 
 }
