@@ -1,6 +1,8 @@
 package bookHotel.Frame;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -17,8 +19,10 @@ import javax.swing.JComponent.AccessibleJComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
@@ -36,45 +40,27 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private JLabel logo;
 
 	private JPanel panel;
-	private JPanel panel_main;
 
-	private JLabel image1;
-	private JLabel image2;
-	private JLabel image3;
-	private JLabel image4;
-	private JLabel image5;
-	private JLabel image6;
-	private JLabel image7;
-	private JLabel image8;
-
-//	private JButton image1_1;
-//	private JButton image2_1;
-//	private JButton image3_1;
-//	private JButton image4_1;
-//	private JButton image5_1;
-//	private JButton image6_1;
-//	private JButton image7_1;
-//	private JButton image8_1;
+	private JButton moveLeft;
+	private JButton moveRight;
 
 	private JButton hotelPanel1;
 	private JButton hotelPanel2;
-	private JButton hotelPanel3;
-	private JButton hotelPanel4;
-	private JButton hotelPanel5;
-	private JButton hotelPanel6;
-	private JButton hotelPanel7;
-	private JButton hotelPanel8;
-
-	JScrollPane scroll;
+	private ImageIcon hotelPanel3;
+	private ImageIcon hotelPanel4;
+	private ImageIcon hotelPanel5;
+	private ImageIcon hotelPanel6;
+	private ImageIcon hotelPanel7;
+	private ImageIcon hotelPanel8;
 
 	// JScrollPane sp = new JScrollPane();
 
 	public MainPageFrame() {
 		initData();
 		setInitLayout();
-		
+
 		addActionListener();
-		
+
 	}
 
 	private void initData() {
@@ -84,104 +70,53 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		logo = new JLabel(new ImageIcon("images/logo.png"));
 
 		panel = new JPanel();
-		panel_main = new JPanel();
-		scroll = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//		hotelPanel1 = new JButton(new ImageIcon("images/hotel1.png"));
-//		hotelPanel2 = new JButton(new ImageIcon("images/hotel1.png"));
-//		hotelPanel3 = new JButton(new ImageIcon("images/hotel1.png"));
-//		hotelPanel4 = new JButton(new ImageIcon("images/hotel1.png"));
-//		hotelPanel5 = new JButton(new ImageIcon("images/hotel1.png"));
-//		hotelPanel6 = new JButton(new ImageIcon("images/hotel1.png"));
-//		hotelPanel7 = new JButton(new ImageIcon("images/hotel1.png"));
-//		hotelPanel8 = new JButton(new ImageIcon("images/hotel1.png"));
-//		
-//
-//		hotelPanel1.setBounds(0, 0, 240, 250);
-//		hotelPanel2.setBounds(240, 0, 240, 250);
-//		hotelPanel3.setBounds(0, 250, 240, 250);
-//		hotelPanel4.setBounds(240, 250, 240, 250);
-//		hotelPanel5.setBounds(0, 500, 240, 250);
-//		hotelPanel6.setBounds(240, 500, 240, 250);
-//		hotelPanel7.setBounds(0, 750, 240, 250);
-//		hotelPanel8.setBounds(240, 750, 240, 250);
-		ImageIcon icon = new ImageIcon("images/hotel1.png");
-		image1 = new JLabel(new ImageIcon("images/hotel1.png"));
-		image2 = new JLabel(new ImageIcon("images/hotel1.png"));
-		image3 = new JLabel(new ImageIcon("images/hotel1.png"));
-		image4 = new JLabel(new ImageIcon("images/hotel1.png"));
-		image5 = new JLabel(new ImageIcon("images/hotel1.png"));
-		image6 = new JLabel(new ImageIcon("images/hotel1.png"));
-		image7 = new JLabel(new ImageIcon("images/hotel1.png"));
-		image8 = new JLabel(new ImageIcon("images/hotel1.png"));
-		
-
-
-		image1.setBounds(0, 0, 240, 250);
-		image2.setBounds(240, 0, 240, 250);
-		image3.setBounds(0, 250, 240, 250);
-		image4.setBounds(240, 250, 240, 250);
-		image5.setBounds(0, 500, 240, 250);
-		image6.setBounds(240, 500, 240, 250);
-		image7.setBounds(0, 750, 240, 250);
-		image8.setBounds(240, 750, 240, 250);
-
-		
+	
+		hotelPanel1 = new JButton(new ImageIcon("images/hotel1.png"));
+		hotelPanel2 = new JButton(new ImageIcon("images/hotel1.png"));
+		hotelPanel3 = new ImageIcon("images/hotel2.png");
+		hotelPanel4 = new ImageIcon("images/hotel2.png");
+		hotelPanel5 = new ImageIcon("images/hotel3.png");
+		hotelPanel6 = new ImageIcon("images/hotel3.png");
+		hotelPanel7 = new ImageIcon("images/hotel1.png");
+		hotelPanel8 = new ImageIcon("images/hotel1.png");
+		moveLeft = new JButton(new ImageIcon("images/left.png"));
+		moveRight = new JButton(new ImageIcon("images/right.png"));
 	}
 
 	private void setInitLayout() {
-
+		setVisible(true);
 		setLayout(null);
-		panel.setLayout(null);
-
-//		scroll.add(hotelPanel1);
-//		scroll.add(hotelPanel2);
-//		scroll.add(hotelPanel3);
-//		scroll.add(hotelPanel4);
-//		scroll.add(hotelPanel5);
-//		scroll.add(hotelPanel6);
-//		scroll.add(hotelPanel7);
-//		scroll.add(hotelPanel8);
-
-
+		this.getContentPane().setBackground(Color.white);
+		logo.setBounds(200, 0, 150, 100);
+		this.add(logo);
 
 		// 1. 로고 메인 패널에 붙이기
-		this.getContentPane().setBackground(Color.white);
-		this.add(logo);
-		logo.setBounds(200, 0, 150, 100);
-		this.add(panel);
-		panel.setBounds(40, 80, 500, 2000);
-		add(panel);
-//		scroll.setBackground(Color.white);
-//		scroll.setBounds(0, 0, 500, 800);
-		
 
-		// scroll.setForeground(Color.white);
+		panel.setBounds(30, 100, 520, 1400);
+		panel.setBackground(Color.white);
+		this.getContentPane().add(panel);
 
-		// scroll.setBorder(new TitledBorder(new MatteBorder(5, 5, 5, 5,
-		// Color.LIGHT_GRAY), "호텔 검색 "));
-		scroll.createHorizontalScrollBar();
-		scroll.setOpaque(false);
-		
-//	scroll.insets(image1);
-		scroll.add(image2);
-		scroll.add(image3);
-		scroll.add(image4);
-		scroll.add(image5);
-		scroll.add(image6);
-		scroll.add(image7);
-		scroll.add(image8);
-		setVisible(true);
-		
-		setContentPane(scroll);
-		
+		panel.setLayout(null);
+		moveLeft.setBorderPainted(false);
+		moveLeft.setContentAreaFilled(false);
+		moveRight.setBorderPainted(false);
+		moveRight.setContentAreaFilled(false);
+		setCompo(moveLeft, 0, 250, 80, 150, panel);
+		setCompo(moveRight, 440, 250, 80, 150, panel);
+		setCompo(hotelPanel1, 80, 0, 350, 380, panel);
+		setCompo(hotelPanel2, 80, 380, 350, 380, panel);
+//		setCompo(hotelPanel3, 0, 250, 240, 250, panel);
+//		setCompo(hotelPanel4, 240, 250, 240, 250, panel);
+//		setCompo(hotelPanel5, 0, 500, 240, 250, panel);
+//		setCompo(hotelPanel6, 0, 500, 240, 250, panel);	
+//		setCompo(hotelPanel7, 0, , 240, 250, panel);
+//		setCompo(hotelPanel8, 0, 0, 240, 250, panel);
+
 	}
 
-	
-
-
 	private void addActionListener() {
-//		image1_1.addActionListener(this);
-//		image2_1.addActionListener(this);
+		moveLeft.addActionListener(this);
+		moveRight.addActionListener(this);
 	}
 
 	@Override
@@ -193,11 +128,13 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		 * 회원가입 버튼을 누르면 회원가입 창으로 이동
 		 *
 		 */
-		if (e.getSource() == hotelPanel1) {
+		if (e.getSource() == moveLeft) {
+			hotelPanel1.setIcon(hotelPanel3);
+			hotelPanel2.setIcon(hotelPanel5);
+		} else if (e.getSource() == moveRight) {
+			hotelPanel1.setIcon(hotelPanel6);
+			hotelPanel2.setIcon(hotelPanel7);
 
-		} else if (e.getSource() == hotelPanel2) {
-			dispose();
-			new JoinFrame();
 		}
 
 	}

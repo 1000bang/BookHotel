@@ -58,6 +58,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 
 	private RoundedButton update;
 	private RoundedButton search;
+	private RoundedButton delete;
 	private RoundedButton goBack;
 	BookService bookService;
 
@@ -88,6 +89,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 
 		update = new RoundedButton("수정하기");
 		search = new RoundedButton("조회하기");
+		delete = new RoundedButton("삭제하기");
 
 		warningHotelNo = new JLabel("* HotelNo는 ");
 		warningHotelName = new JLabel("* 비밀번호는 5글자 이상 적어주세요. ");
@@ -129,6 +131,9 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		search.setBounds(20, 600, 500, 70);
 		this.getContentPane().add(search);
 
+		delete.setBounds(20, 760, 500, 70);
+		this.getContentPane().add(delete);
+
 	}
 
 	private void addActionListener() {
@@ -160,6 +165,8 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		else if (e.getSource() == update) {
 			bookService.updateRoom(roomIdText.getText(), dayPriceText.getText(), nightPriceText.getText(),
 					roomNoText.getText());
+		}else if (e.getSource() == delete) {
+			
 		}
 	}
 

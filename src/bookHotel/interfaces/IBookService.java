@@ -3,6 +3,7 @@ package bookHotel.interfaces;
 import java.util.List;
 
 import bookHotel.Frame.LoginFrame;
+import bookHotel.Frame.RoomDelFrame;
 import bookHotel.Frame.RoomUpdateFrame;
 import bookHotel.dto.ResponseInfo;
 import bookHotel.dto.ResquestInfo;
@@ -50,7 +51,7 @@ public interface IBookService {
 	void updateRoom(String roomId, String newDayPrice, String newNightPrice, String newRoomNo );
 
 	   
-	   void searchRoom(RoomUpdateFrame roomUpdateFrame);
+	void searchRoom(RoomUpdateFrame roomUpdateFrame);
 	
 }
 

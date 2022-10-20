@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import bookHotel.Frame.LoginFrame;
 import bookHotel.Frame.MainPageFrame;
 import bookHotel.Frame.MasterFrame;
+import bookHotel.Frame.RoomDelFrame;
 import bookHotel.Frame.RoomUpdateFrame;
 import bookHotel.dto.ResponseInfo;
 import bookHotel.dto.ResquestInfo;
@@ -291,6 +292,7 @@ public class BookService implements IBookService {
 		}
 
 	}
+
 
 	@Override
 	public void updateRoom(String roomId, String newDayPrice, String newNightPrice, String newRoomNo) {
