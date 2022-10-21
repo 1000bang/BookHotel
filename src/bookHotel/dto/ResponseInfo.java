@@ -10,9 +10,17 @@ public class ResponseInfo {
 	 private String userPw;
 	 private String hotelNo;
 	 private String roomNo;
-	 private String reservationNo;
+	 private String reservationNumber;
 	 private String id;
 	 private String password;
 	 private String userPhoneNumber;
 	 private String userYear;
+	 private String hotelName;
+	 private String userNo;
+	 private String price;
+	 private String roomId;
+	 private String roomName;
+	 
+	 
+	 
 }
