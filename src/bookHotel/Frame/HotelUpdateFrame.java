@@ -178,9 +178,4 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 		txt.setFont(new Font(getName(), Font.PLAIN, 20));
 	}
 
-	public static void main(String[] args) {
-		new HotelUpdateFrame();
-
-	}
-
 }

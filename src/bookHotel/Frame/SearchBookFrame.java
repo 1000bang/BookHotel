@@ -230,9 +230,4 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		comboHotel.setVisible(hotel);
 	}
 
-	public static void main(String[] args) {
-		new SearchBookFrame();
-
-	}
-
 }

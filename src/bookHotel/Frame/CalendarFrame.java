@@ -5,11 +5,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 
-
 import java.awt.event.ActionEvent;
 
 import java.awt.event.ActionListener;
-
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.DefaultComboBoxModel;
@@ -24,7 +23,7 @@ import javax.swing.JLabel;
 
 import javax.swing.JPanel;
 
-public class test extends JFrame implements ActionListener {
+public class CalendarFrame extends JFrame implements ActionListener {
 
 	// North
 
@@ -58,10 +57,23 @@ public class test extends JFrame implements ActionListener {
 
 	Calendar now;
 
+	JButton dayBtn;
+
+	String yyyy;
+	String mo;
+	String dd;
+	
+	String reservationDate;
+	
+
+	ArrayList<JButton> buttons = new ArrayList<>();
+
 	int year, month, date;
 
-	public test() {
-
+	BookFrame bookFrame;
+	
+	public CalendarFrame(BookFrame bookFrame) {
+this.bookFrame = bookFrame;
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE); // 자원 해제 후 종료
 
 		now = Calendar.getInstance(); // 현재 날짜
@@ -164,6 +176,7 @@ public class test extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 
 		Object obj = ae.getSource();
+		String dayOut = null;
 
 		if (obj instanceof JButton) {
 
@@ -199,11 +212,26 @@ public class test extends JFrame implements ActionListener {
 
 				}
 
+			} else {
+				for (int j = 0; j < buttons.size(); j++) {
+					if (eventBtn.equals(buttons.get(j))) {
+						dayOut = buttons.get(j).getText();
+					}
+				}
+				// System.out.println(dayOut);
+
+//				System.out.println(buttons.get(mm);
+//				
 			}
 
+			yyyy = (String) yearCombo.getSelectedItem().toString();
+			mo = (String) monthCombo.getSelectedItem().toString();
+			
+			reservationDate = yyyy + "년 " + mo + "월 " + dayOut + "일 ";
+			bookFrame.reservationDate.setText(reservationDate);
 			yearCombo.setSelectedItem(yy);
-
 			monthCombo.setSelectedItem(mm);
+			dispose();
 
 		} else if (obj instanceof JComboBox) { // 콤보박스 이벤트 발생시
 
@@ -242,10 +270,11 @@ public class test extends JFrame implements ActionListener {
 		}
 
 		for (int i = 1; i <= lastDate; i++) {
+			buttons.add(new JButton(String.valueOf(i)));
+			// dayBtn = new JButton(String.valueOf(i));
+			buttons.get(i - 1).setBorderPainted(false);
+			buttons.get(i - 1).setContentAreaFilled(false);
 
-			JButton lbl = new JButton(String.valueOf(i));
-			lbl.setBorderPainted(false);
-			lbl.setContentAreaFilled(false);
 			// JLabel lbl = new JLabel(String.valueOf(i), JLabel.CENTER);
 
 			cal.set(y, m - 1, i);
@@ -254,24 +283,19 @@ public class test extends JFrame implements ActionListener {
 
 			if (outWeek == 1) {
 
-				lbl.setForeground(Color.red);
+				buttons.get(i - 1).setForeground(Color.red);
 
 			} else if (outWeek == 7) {
 
-				lbl.setForeground(Color.BLUE);
+				buttons.get(i - 1).setForeground(Color.BLUE);
 
 			}
-
-			datePane.add(lbl);
+			buttons.get(i - 1).addActionListener(this);
+			datePane.add(buttons.get(i - 1));
 
 		}
 
 	}
 
-	public static void main(String[] args) {
-
-		new test();
-
-	}
 
 }

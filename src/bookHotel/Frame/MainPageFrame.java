@@ -383,9 +383,4 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		new MainPageFrame();
-
-	}
-
 }

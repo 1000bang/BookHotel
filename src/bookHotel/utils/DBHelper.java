@@ -15,7 +15,7 @@ public class DBHelper {
 	private static final String DB_CHARSET = "UTF-8";
 	private static final String DB_USER_NAME = "root";
 	//비번 바꿔 !
-	private static final String DB_PASSWORD = "asd1234";
+	private static final String DB_PASSWORD = "dlfdl123";
 
 	// Single ton
 	private static DBHelper dbHelper;
