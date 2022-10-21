@@ -17,13 +17,17 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
+import bookHotel.BookService;
 import bookHotel.RoundedButton;
 import bookHotel.RoundedPass;
 import bookHotel.RoundedTextField;
+import lombok.Data;
+import lombok.Getter;
 
 public class JoinFrame extends JFrame implements ActionListener {
 
 	private JLabel logo;
+	private JButton goBack;
 	private JLabel id;
 	private JLabel passWord;
 	private JLabel passWordCheck;
@@ -44,6 +48,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 
 	private RoundedButton join;
 
+	BookService bookService;
 	// JScrollPane sp = new JScrollPane();
 
 	public JoinFrame() {
@@ -53,12 +58,61 @@ public class JoinFrame extends JFrame implements ActionListener {
 
 	}
 
+	public RoundedTextField getIdText() {
+		return idText;
+	}
+
+	public void setIdText(RoundedTextField idText) {
+		this.idText = idText;
+	}
+
+	public RoundedPass getPwText() {
+		return pwText;
+	}
+
+	public void setPwText(RoundedPass pwText) {
+		this.pwText = pwText;
+	}
+
+	public RoundedPass getPwcheck() {
+		return pwcheck;
+	}
+
+	public void setPwcheck(RoundedPass pwcheck) {
+		this.pwcheck = pwcheck;
+	}
+
+	public RoundedTextField getNameText() {
+		return nameText;
+	}
+
+	public void setNameText(RoundedTextField nameText) {
+		this.nameText = nameText;
+	}
+
+	public RoundedTextField getPhoneNumberText() {
+		return phoneNumberText;
+	}
+
+	public void setPhoneNumberText(RoundedTextField phoneNumberText) {
+		this.phoneNumberText = phoneNumberText;
+	}
+
+	public RoundedTextField getBirthText() {
+		return birthText;
+	}
+
+	public void setBirthText(RoundedTextField birthText) {
+		this.birthText = birthText;
+	}
+
 	private void initData() {
 		setTitle("LogIn");
 		setSize(600, 1300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		logo = new JLabel(new ImageIcon("images/logo.png"));
+		goBack = new JButton(new ImageIcon("images/goback.png"));
 		id = new JLabel("아이디");
 		passWord = new JLabel("비밀번호");
 		passWordCheck = new JLabel("비밀번호 확인");
@@ -78,13 +132,18 @@ public class JoinFrame extends JFrame implements ActionListener {
 		warningPw = new JLabel("* 비밀번호는 5글자 이상 적어주세요. ");
 		warningpwCheck = new JLabel("* 비밀번호와 일치하게 적어주세요. ");
 		warningName = new JLabel("* 이름을 필수 값입니다.  ");
-
+		bookService = new BookService();
 	}
 
 	private void setInitLayout() {
 		setVisible(true);
 		setLayout(null);
 		getContentPane().setBackground(Color.white);
+		goBack.setBounds(0, 0, 70, 70);
+		goBack.setBorderPainted(false);
+		goBack.setContentAreaFilled(false);
+		this.getContentPane().add(goBack);
+
 		logo.setBounds(200, 0, 150, 100);
 		this.getContentPane().add(logo);
 
@@ -110,6 +169,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 	private void addActionListener() {
 		join.addActionListener(this);
 		idText.addActionListener(this);
+		goBack.addActionListener(this);
 
 	}
 
@@ -141,10 +201,11 @@ public class JoinFrame extends JFrame implements ActionListener {
 							JOptionPane.showMessageDialog(this, "이름을 입력하지 않았습니다.");
 							warningName.setForeground(Color.red);
 							setLabel(warningName, 120, 410, 300, 20);
-						} else if (nameText != null) {
+						} else if (nameText != null) { 
 							warningName.setVisible(false);// 회원가입 완료
 							JOptionPane.showMessageDialog(this, "회원가입 완료.");
 							// insert 메서드 호 출
+							bookService.signIn(this);
 							dispose();
 							new LoginFrame();
 						}
@@ -152,7 +213,10 @@ public class JoinFrame extends JFrame implements ActionListener {
 				}
 			}
 		} // end of join if
-
+		else if (e.getSource() == goBack) {
+			dispose();
+			new LoginFrame();
+		}
 	}
 
 	private void setLabel(JLabel label, int x, int y, int w, int h) {

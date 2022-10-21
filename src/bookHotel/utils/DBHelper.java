@@ -23,7 +23,7 @@ public class DBHelper {
 
 	private DBHelper() {
 
-	}
+	} 
 
 	public static DBHelper getInstance() {
 		if (dbHelper == null) {
