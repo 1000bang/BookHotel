@@ -38,6 +38,8 @@ import bookHotel.BookService;
 import bookHotel.RoundedButton;
 import bookHotel.RoundedPass;
 import bookHotel.RoundedTextField;
+import bookHotel.dto.LoginUserInfo;
+import bookHotel.utils.DBHelper;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -86,13 +88,15 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private ImageIcon hotelPanel6;
 	private ImageIcon hotelPanel7;
 	private ImageIcon hotelPanel8;
+	LoginUserInfo loginuserino;
 
-	// JScrollPane sp = new JScrollPane();
+	// JScrollPane sp = new JScrollPane(); 
 
 	public MainPageFrame() {
 		initData();
 		setInitLayout();
 		addActionListener();
+		this.loginuserino = LoginUserInfo.getInstance();
 
 	}
 
@@ -196,7 +200,7 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		review(contentslabel, 12, 20, 160, 300, 30);
 
 		contentsField.setVisible(false);
-		contentsField.setBackground(Color.LIGHT_GRAY);
+		contentsField.setBackground(new Color(224, 224, 224));
 		contentsField.setBorder(new EtchedBorder(Color.GRAY, Color.DARK_GRAY));
 		contentsField.setBounds(20, 200, 300, 400);
 		panel.add(contentsField);
@@ -258,11 +262,17 @@ public class MainPageFrame extends JFrame implements ActionListener {
 			hotelVisible(false);
 			reviewVisible(true);
 			userVisible(false);
+			writerLabel_1.setText(loginuserino.userName);
 
 		} else if (e.getSource() == userInfo) {
 			hotelVisible(false);
 			reviewVisible(false);
 			userVisible(true);
+			userNoLabel.setText(loginuserino.userNo);
+			userIdLabel.setText(loginuserino.id);
+			userNameLabel.setText(loginuserino.userName);
+			userPhoneNumberLabel.setText(loginuserino.userPhoneNumber);
+			userBirth_Label.setText(loginuserino.useryear);
 
 		} else if (e.getSource() == hotelPanelMain) {
 			new BookFrame();

@@ -30,10 +30,16 @@ hotelName varchar(20)
 roomNo int 
 hotelNo int 
 price int 
-Related Tables:
-Target hotel (hotelNo → hotelNo) 
-On Update RESTRICT 
-On Delete RESTRICT
+
+
+
+조회 / 수정 됨
+
+삭제/ 추가 안됨
+
+
+
+
  */
 @Getter
 @Setter
@@ -155,7 +161,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		delete.addActionListener(this);
 		insert.addActionListener(this);
 		goBack.addActionListener(this);
-	}
+	} 
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

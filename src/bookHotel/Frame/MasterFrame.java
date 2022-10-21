@@ -23,7 +23,7 @@ public class MasterFrame extends JFrame implements ActionListener {
 	private JLabel logo;
 	private JButton goBack;
 	// JScrollPane sp = new JScrollPane();
-
+ 
 	public MasterFrame() {
 		initData();
 		setInitLayout();

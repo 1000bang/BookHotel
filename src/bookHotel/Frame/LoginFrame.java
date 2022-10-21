@@ -20,6 +20,8 @@ import bookHotel.BookService;
 import bookHotel.RoundedButton;
 import bookHotel.RoundedPass;
 import bookHotel.RoundedTextField;
+import bookHotel.dto.LoginUserInfo;
+import bookHotel.utils.DBHelper;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,18 +34,20 @@ public class LoginFrame extends JFrame implements ActionListener {
 	private JLabel passWord;
 
 	private RoundedButton logIn;
-	private RoundedButton join;
+	private RoundedButton join; 
 
 	private RoundedTextField id;
 	private RoundedPass pw;
 	BookService bookService;
+	LoginUserInfo userInfo;
 
 	// JScrollPane sp = new JScrollPane();
-
+ 
 	public LoginFrame() {
 		initData();
 		setInitLayout();
 		addActionListener();
+		this.userInfo = LoginUserInfo.getInstance();
 	}
 
 	private void initData() {
@@ -107,7 +111,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 		*/
 		if (e.getSource() == logIn) {
 			dispose();
-			bookService.selectLoginInfo(this);		
+			bookService.selectLoginInfo(this, userInfo);		
 		} else if (e.getSource() == join) {
 			dispose();
 			new JoinFrame();

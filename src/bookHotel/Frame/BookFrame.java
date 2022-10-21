@@ -31,7 +31,7 @@ public class BookFrame extends JFrame {
 	private void initData() {
 		setTitle("메인 홈페이지");
 		setSize(600, 500);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 	}
 
 	private void setInitLayout() {

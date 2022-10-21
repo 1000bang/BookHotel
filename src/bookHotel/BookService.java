@@ -15,8 +15,10 @@ import bookHotel.Frame.MainPageFrame;
 import bookHotel.Frame.MasterFrame;
 import bookHotel.Frame.BookFrame;
 import bookHotel.Frame.RoomUpdateFrame;
+import bookHotel.Frame.SearchBookFrame;
 import bookHotel.dto.ResponseInfo;
 import bookHotel.dto.ResquestInfo;
+import bookHotel.dto.LoginUserInfo;
 import bookHotel.interfaces.IBookService;
 import bookHotel.utils.DBHelper;
 import lombok.Data;
@@ -34,12 +36,12 @@ public class BookService implements IBookService {
 	}
 
 	@Override
-	public void selectLoginInfo(LoginFrame loginFrame) {
+	public void selectLoginInfo(LoginFrame loginFrame, LoginUserInfo userInfo) {
 
 		String sql = "SELECT * FROM userinfo where Id = ?  and password = ? ";
 
 		try {
-			
+
 			psmt = dbHelper.getConnection().prepareStatement(sql);
 			psmt.setString(1, loginFrame.getId().getText());
 			psmt.setString(2, loginFrame.getPw().getText());
@@ -47,8 +49,13 @@ public class BookService implements IBookService {
 			rs = psmt.executeQuery();
 
 			if (rs.next()) {
-				ResquestInfo req = new ResquestInfo();
-				System.out.println(rs.getString(2));
+				userInfo.userNo = rs.getString("userNo");
+				userInfo.id = rs.getString("id");
+				userInfo.passWord = rs.getString("password");
+				userInfo.userName = rs.getString("userName");
+				userInfo.userPhoneNumber = rs.getString("userPhoneNumber");
+				userInfo.useryear = rs.getString("userYear");
+
 				if (rs.getString(2).equals("master")) {
 					new MasterFrame();
 				} else {
@@ -91,14 +98,11 @@ public class BookService implements IBookService {
 	public void signIn(JoinFrame join) {
 		String signInSql = " insert into userInfo(id, password, userName, userPhoneNumber, userYear) "
 				+ " values(?,?,?,?,?) ";
-/*
- * private RoundedTextField idText;
-	private RoundedPass pwText;
-	private RoundedPass pwcheck;
-	private RoundedTextField nameText;
-	private RoundedTextField phoneNumberText;
-	private RoundedTextField birthText;
- */ 
+		/*
+		 * private RoundedTextField idText; private RoundedPass pwText; private
+		 * RoundedPass pwcheck; private RoundedTextField nameText; private
+		 * RoundedTextField phoneNumberText; private RoundedTextField birthText;
+		 */
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(signInSql);
 			psmt.setString(1, join.getIdText().getText());
@@ -305,7 +309,6 @@ public class BookService implements IBookService {
 
 	}
 
-
 	@Override
 	public void updateRoom(String roomId, String newDayPrice, String newNightPrice, String newRoomNo) {
 
@@ -350,43 +353,170 @@ public class BookService implements IBookService {
 
 	}
 
-	public static void main(String[] args) {
-		BookService bookService = new BookService();
-		ResquestInfo info = new ResquestInfo();
+	@Override // 호텔이름으로 (호텔 번호, 호텔 이름, 보유방의 수, 총예약 수) 조회하기 (1행)
+	public void bookSearchByHotelName(SearchBookFrame searchBookFrame) {
 
-		// 숙소 정보 입력
-//		info.setHotelName("테스트모텔1");
-//		info.setAddress("테스트구1");
-//		info.setTelPhone("121-1212-9999");
-//		
-//		// 방정보 입력
-//		info.setRoomNo(102);
-//		info.setPrice(50000);
-//		bookService.insertHotelInfo(info);
-//		
+		String sql = " select h.hotelNo, h.hotelName, count(rs.reservationNumber) as \"총 예약수\","
+				+ " (select count(roomNo) from room as r join hotel as h on h.hotelNo = r.hotelNO ) as \"보유 방의 수\""
+				+ " from reservation rs " + " join hotel as h " + " on h.hotelNo = rs.hotelNo "
+				+ " where h.hotelName like ? limit 1 ";
 
-//		System.out.println(bookService.selectAllUserInfo()); // 유저 정보 전체조회 확인하기
+		List<ResponseInfo> list = new ArrayList<>();
 
-//		 회원가입
-//		info.setId("테스트유저2");
-//		info.setPassword("9999");
-//		info.setUserName("테스트입니다.");
-//		info.setUserPhoneNumber("999-9999-9999");
-//		info.setUserYear("7777-77-77");
-//		bookService.signIn(info);
+		try {
+			psmt = dbHelper.getConnection().prepareStatement(sql);
+			psmt.setString(1, "%" + searchBookFrame.getTextField().getText() + "%");
+			rs = psmt.executeQuery();
 
-		// 호텔 이름 수정하기
-//		info.hotelNameUpdate("갈색도트","브라운도트");
+			if (rs.next()) {
+				searchBookFrame.getInfonext().setText(rs.getString("hotelNo"));
+				searchBookFrame.getInfo_2next().setText(rs.getString("hotelName"));
+				searchBookFrame.getInfo_3next().setText(rs.getString("총 예약수"));
+				searchBookFrame.getInfo_4next().setText(rs.getString("보유 방의 수"));
 
-		// 1. 테스트 코드
-		// 실행 테스트
-		// 변경하고자 하는 이름을 받고, 변경하고 싶은 이름을 받아야 한다.
-		// 호텔 이름 수정하기
-//		boolean result =  bookService.hotelNameUpdate("브라운도트" ,"갈색도트");
-//		System.out.println("result : " + result);
+			}
+		} catch (
 
-		// 방 정보수정하기
-		//bookService.updateRoom("1", "101", "", null);
+		SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll();
+		}
+
+	}
+
+	// 호텔번호로 (호텔 번호, 호텔 이름, 보유방의 수, 총예약 수) 조회하기 (1행)
+	@Override
+	public void bookSearchByHotelNo(SearchBookFrame searchBookFrame) {
+		String sql = " select h.hotelNo, h.hotelName, count(rs.reservationNumber) as \"총 예약수\","
+				+ " (select count(roomNo) from room as r join hotel as h on h.hotelNo = r.hotelNo ) as \"보유 방의 수\" "
+				+ " from reservation rs " + " join hotel as h " + " on h.hotelNo = rs.hotelNO "
+				+ " where h.hotelNo = ? limit 1";
+
+		try {
+			psmt = dbHelper.getConnection().prepareStatement(sql);
+			psmt.setString(1, searchBookFrame.getTextField().getText());
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+
+				searchBookFrame.getInfonext().setText(rs.getString("hotelNo"));
+				searchBookFrame.getInfo_2next().setText(rs.getString("hotelName"));
+				searchBookFrame.getInfo_3next().setText(rs.getString("총 예약수"));
+				searchBookFrame.getInfo_4next().setText(rs.getString("보유 방의 수"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll();
+		}
+
+	}
+
+	// 회원이름으로 (회원번호, 호텔이름, 방 호수, 가격) 조회하기 (예약 현황) (다중행)
+	@Override
+	public void reservationSearchByUserName(SearchBookFrame searchBookFrame) {
+
+		String sql = " select u.userNo, h.hotelName, r.roomNo, r.price " + " from reservation as rs "
+				+ " join userInfo as u " + " on rs.userNo = u.userNo " + " join hotel as h "
+				+ " on rs.hotelNo = h.hotelNo " + " join room as r " + " on h.hotelNo = r.hotelNo "
+				+ " where u.userName = ? limit 1 ";
+
+		List<ResponseInfo> list = new ArrayList<>();
+		try {
+			psmt = dbHelper.getConnection().prepareStatement(sql);
+			psmt.setString(1, searchBookFrame.getTextField().getText());
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+				ResponseInfo userInfo = new ResponseInfo();
+				userInfo.setUserNo(rs.getString("userNo"));
+				userInfo.setHotelName(rs.getString("hotelName"));
+				userInfo.setRoomNo(rs.getString("roomNo"));
+				userInfo.setPrice(rs.getString("price"));
+				list.add(userInfo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll();
+		}
+
+	}
+
+	// 호텔이름으로 (회원번호, 호텔이름, 방 호수, 가격) 조회하기 (예약 현황) (다중행)
+	@Override
+	public void reservationSearchByHotelName(SearchBookFrame searchBookFrame) {
+		String sql = " select u.userNo, h.hotelName, r.roomNo, r.price " + " from reservation as rs "
+				+ " join userInfo as u " + " on rs.userNo = u.userNo " + " join hotel as h "
+				+ " on rs.hotelNo = h.hotelNo " + " join room as r " + " on h.hotelNo = r.hotelNo "
+				+ " where u.userName = ? limit 1 ";
+
+		List<ResponseInfo> list = new ArrayList<>();
+		try {
+			psmt = dbHelper.getConnection().prepareStatement(sql);
+			psmt.setString(1, searchBookFrame.getTextField().getText());
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+				ResponseInfo userInfo = new ResponseInfo();
+				userInfo.setUserNo(rs.getString("userNo"));
+				userInfo.setHotelName(rs.getString("hotelName"));
+				userInfo.setRoomNo(rs.getString("roomNo"));
+				userInfo.setPrice(rs.getString("price"));
+				list.add(userInfo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll();
+		}
+	}
+
+	// 호텔번호로 (방Id, 호수, 호텔이름, 가격) (다중행)
+	@Override
+	public void roomInfoSearchByHotelNo(SearchBookFrame searchBookFrame) {
+		String sql = " select r.roomId, roomNo, h.hotelName, r.price " + "from hotel as h " + "join room as r "
+				+ "on h.hotelNo = r.hotelNo " + "where h.hotelNo = ? limit 1 ";
+
+		List<ResponseInfo> list = new ArrayList<>();
+		try {
+			psmt = dbHelper.getConnection().prepareStatement(sql);
+			psmt.setString(1, searchBookFrame.getTextField().getText());
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+				ResponseInfo userInfo = new ResponseInfo();
+				userInfo.setRoomId(rs.getString("roomId"));
+				userInfo.setRoomNo(rs.getString("roomNo"));
+				userInfo.setHotelName(rs.getString("hotelName"));
+				userInfo.setPrice(rs.getString("price"));
+				list.add(userInfo);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll();
+		}
+	}
+
+	@Override
+	public void roomInfoSearchByHotelName(SearchBookFrame searchBookFrame) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void roomInfoSearchByRoomId(SearchBookFrame searchBookFrame) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void userInfoSearchByUserName(SearchBookFrame searchBookFrame) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void userInfoSearchByUserNo() {
+		// TODO Auto-generated method stub
 
 	}
 
