@@ -17,8 +17,30 @@ import bookHotel.RoundedTextField;
 import bookHotel.utils.Define;
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
 @Setter
-	public class RoomDelFrame extends JFrame {
+public class BookFrame extends JFrame {
 
+	public BookFrame() {
+		initData();
+		setInitLayout();
+		addActionListener();
 	}
+
+	private void initData() {
+		setTitle("메인 홈페이지");
+		setSize(600, 500);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	private void setInitLayout() {
+		setVisible(true);
+		setLayout(null);
+	}
+	
+	
+	private void addActionListener() {
+		
+	}
+}

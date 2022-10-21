@@ -14,15 +14,14 @@ import javax.swing.JPanel;
 import bookHotel.RoundedButton;
 
 public class MasterFrame extends JFrame implements ActionListener {
-
-	private RoundedButton image1_1;
-	private RoundedButton image2_1;
-	private RoundedButton image3_1;
-	private RoundedButton image4_1;
-	private RoundedButton image5_1;
+	
+	private RoundedButton hotelUpdate;
+	private RoundedButton roomUpdate;
+	private RoundedButton none;
+	private RoundedButton search;
 
 	private JLabel logo;
-
+	private JButton goBack;
 	// JScrollPane sp = new JScrollPane();
 
 	public MasterFrame() {
@@ -36,11 +35,12 @@ public class MasterFrame extends JFrame implements ActionListener {
 		setSize(600, 1300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		logo = new JLabel(new ImageIcon("images/logo.png"));
-
-		image1_1 = new RoundedButton("호텔 정보 수정하기");
-		image2_1 = new RoundedButton("객실 정보 수정하기");
-		image3_1 = new RoundedButton("객실 정보 삭제하기");
-		image4_1 = new RoundedButton("예약자 조회");
+		goBack = new JButton(new ImageIcon("images/goback.png"));
+		hotelUpdate = new RoundedButton("호텔 정보 수정하기");
+		roomUpdate = new RoundedButton("객실 정보 수정하기");
+		search = new RoundedButton("정보 검색하기");
+		none = new RoundedButton("----");
+		
 
 	}
 
@@ -49,19 +49,27 @@ public class MasterFrame extends JFrame implements ActionListener {
 		setLayout(null);
 		// 1. 로고 메인 패널에 붙이기
 		this.getContentPane().setBackground(Color.white);
+		goBack.setBounds(0,0,70,70);
+		goBack.setBorderPainted(false);
+		goBack.setContentAreaFilled(false);
+		this.getContentPane().add(goBack);
+		
 		logo.setBounds(200, 0, 150, 100);
 		this.getContentPane().add(logo);
 		
-		setCompo(image1_1, 35, 150,  500, 70);
-		setCompo(image2_1, 35, 250,  500, 70);
-		setCompo(image3_1, 35, 350,  500, 70);
-		setCompo(image4_1, 35, 450,  500, 70);
+		setCompo(hotelUpdate, 35, 150,  500, 70);
+		setCompo(roomUpdate, 35, 250,  500, 70);
+		setCompo(none, 35, 450,  500, 70);
+		setCompo(search, 35, 350,  500, 70);
 		
 	}
 
 	private void addActionListener() {
-		image1_1.addActionListener(this);
-		image2_1.addActionListener(this);
+		hotelUpdate.addActionListener(this);
+		roomUpdate.addActionListener(this);
+		search.addActionListener(this);
+		none.addActionListener(this);
+		goBack.addActionListener(this);
 	}
 
 	@Override
@@ -70,15 +78,28 @@ public class MasterFrame extends JFrame implements ActionListener {
 		 * 
 		 *
 		 */
-		if (e.getSource() == image1_1) {
+		if (e.getSource() == hotelUpdate) {
 			//호텔 수정 
+			dispose();
+			new HotelUpdateFrame();
 			
-			
-		} else if (e.getSource() == image2_1) {
+		} else if (e.getSource() == roomUpdate) {
 			//룸수정
 			dispose();
 			new RoomUpdateFrame();
 			
+		}else if (e.getSource() == search) {
+			//조회
+			dispose();
+			new SearchBookFrame();
+			
+		}else if (e.getSource() == none) {
+			
+		}
+		
+		else if (e.getSource() == goBack) {
+			dispose();
+			new LoginFrame();
 		}
 
 	}

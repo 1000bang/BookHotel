@@ -8,12 +8,12 @@ import lombok.Data;
 // db컬럼명 
 public class ResquestInfo {
 
-	private String userName; 
-	private String password;
-	private int userNo;
-	private String id;
-	private String userPhoneNumber;
-	private String userYear;
+	public String userName;
+	public String password;
+	public int userNo;
+	public String id;
+	public String userPhoneNumber;
+	public String userYear;
 	private int hotelNo;
 	private int roomNo;
 	private String reservationNo;
@@ -27,6 +27,5 @@ public class ResquestInfo {
 	private int price;
 	private String address;
 	private String telPhone;
-	
 
 }

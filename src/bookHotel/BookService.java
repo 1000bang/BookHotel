@@ -9,10 +9,11 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import bookHotel.Frame.JoinFrame;
 import bookHotel.Frame.LoginFrame;
 import bookHotel.Frame.MainPageFrame;
 import bookHotel.Frame.MasterFrame;
-import bookHotel.Frame.RoomDelFrame;
+import bookHotel.Frame.BookFrame;
 import bookHotel.Frame.RoomUpdateFrame;
 import bookHotel.dto.ResponseInfo;
 import bookHotel.dto.ResquestInfo;
@@ -35,16 +36,20 @@ public class BookService implements IBookService {
 	@Override
 	public void selectLoginInfo(LoginFrame loginFrame) {
 
-		String sql = "SELECT Id, password FROM userinfo where Id =   ?  and password = ? ";
+		String sql = "SELECT * FROM userinfo where Id = ?  and password = ? ";
 
 		try {
+			
 			psmt = dbHelper.getConnection().prepareStatement(sql);
 			psmt.setString(1, loginFrame.getId().getText());
 			psmt.setString(2, loginFrame.getPw().getText());
+			System.out.println(psmt.toString());
 			rs = psmt.executeQuery();
 
 			if (rs.next()) {
-				if (rs.getString(1).equals("master")) {
+				ResquestInfo req = new ResquestInfo();
+				System.out.println(rs.getString(2));
+				if (rs.getString(2).equals("master")) {
 					new MasterFrame();
 				} else {
 					new MainPageFrame();
@@ -83,17 +88,24 @@ public class BookService implements IBookService {
 
 	// 회원가입
 	@Override
-	public void signIn(ResquestInfo req) {
+	public void signIn(JoinFrame join) {
 		String signInSql = " insert into userInfo(id, password, userName, userPhoneNumber, userYear) "
 				+ " values(?,?,?,?,?) ";
-
+/*
+ * private RoundedTextField idText;
+	private RoundedPass pwText;
+	private RoundedPass pwcheck;
+	private RoundedTextField nameText;
+	private RoundedTextField phoneNumberText;
+	private RoundedTextField birthText;
+ */ 
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(signInSql);
-			psmt.setString(1, req.getId());
-			psmt.setString(2, req.getPassword());
-			psmt.setString(3, req.getUserName());
-			psmt.setString(4, req.getUserPhoneNumber());
-			psmt.setString(5, req.getUserYear());
+			psmt.setString(1, join.getIdText().getText());
+			psmt.setString(2, join.getPwText().getText());
+			psmt.setString(3, join.getNameText().getText());
+			psmt.setString(4, join.getPhoneNumberText().getText());
+			psmt.setString(5, join.getBirthText().getText());
 			psmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

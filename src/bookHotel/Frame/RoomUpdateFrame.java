@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -39,6 +40,7 @@ On Delete RESTRICT
 public class RoomUpdateFrame extends JFrame implements ActionListener {
 
 	private JLabel logo;
+	private JButton goBack;
 	private JLabel roomId;
 	private JLabel hotelNo;
 	private JLabel roomNo;
@@ -59,7 +61,8 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 	private RoundedButton update;
 	private RoundedButton search;
 	private RoundedButton delete;
-	private RoundedButton goBack;
+	private RoundedButton insert;
+
 	BookService bookService;
 
 	public RoomUpdateFrame() {
@@ -75,6 +78,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		logo = new JLabel(new ImageIcon("images/logo.png"));
+		goBack = new JButton(new ImageIcon("images/goback.png"));
 		hotelNo = new JLabel("호텔 번호");
 		roomNo = new JLabel("호실 번호");
 		dayPrice = new JLabel("대실 가격 ");
@@ -90,6 +94,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		update = new RoundedButton("수정하기");
 		search = new RoundedButton("조회하기");
 		delete = new RoundedButton("삭제하기");
+		insert = new RoundedButton("추가하기");
 
 		warningHotelNo = new JLabel("* HotelNo는 ");
 		warningHotelName = new JLabel("* 비밀번호는 5글자 이상 적어주세요. ");
@@ -103,6 +108,11 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		setVisible(true);
 		setLayout(null);
 		getContentPane().setBackground(Color.white);
+		goBack.setBounds(0, 0, 70, 70);
+		goBack.setBorderPainted(false);
+		goBack.setContentAreaFilled(false);
+		this.getContentPane().add(goBack);
+
 		logo.setBounds(200, 0, 150, 100);
 		this.getContentPane().add(logo);
 
@@ -134,12 +144,17 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		delete.setBounds(20, 760, 500, 70);
 		this.getContentPane().add(delete);
 
+		insert.setBounds(20, 840, 500, 70);
+		this.getContentPane().add(insert);
+
 	}
 
 	private void addActionListener() {
 		update.addActionListener(this);
 		search.addActionListener(this);
-
+		delete.addActionListener(this);
+		insert.addActionListener(this);
+		goBack.addActionListener(this);
 	}
 
 	@Override
@@ -165,8 +180,13 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		else if (e.getSource() == update) {
 			bookService.updateRoom(roomIdText.getText(), dayPriceText.getText(), nightPriceText.getText(),
 					roomNoText.getText());
-		}else if (e.getSource() == delete) {
-			
+		} else if (e.getSource() == delete) {
+
+		} else if (e.getSource() == insert) {
+
+		} else if (e.getSource() == goBack) {
+			dispose();
+			new MasterFrame();
 		}
 	}
 
@@ -180,6 +200,10 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		txt.setBounds(x, y, w, h);
 		this.getContentPane().add(txt);
 		txt.setFont(new Font(getName(), Font.PLAIN, 20));
+	}
+
+	public static void main(String[] args) {
+		new RoomUpdateFrame();
 	}
 
 }

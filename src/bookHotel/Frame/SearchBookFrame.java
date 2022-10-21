@@ -7,6 +7,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -22,25 +23,38 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 	 * reservationNumber int AI PK roomNo int hotelNo int userNo int
 	 */
 
+	// final
+	private JButton goBack;
+	private final String HOTEL = "호텔정보 조회";
+	private final String BOOK = "예약정보 조회";
+	private final String ROOM = "방정보 조회";
+	private final String USER = "유저 조회";
+ 
 	private JComboBox<String> combo;
 	private JComboBox<String> combo2;
 	private JComboBox<String> comboHotel;
 	private JComboBox<String> comboBook;
 	private JComboBox<String> comboRoom;
 	private JComboBox<String> comboUser;
-	String[] comboItem = { "---------------", "호텔정보 조회 ", "예약정보 조회 ", "방정보 조회 ", "유저 조회 " };
+	String[] comboItem = { "---------------", HOTEL, BOOK, ROOM, USER };
 	String[] comboItemNone = { "---" };
-	String[] comboItemHotel = { "---", "호텔이름 ", "호텔번호 ", "방 호수 ", "방 고유번호 " };
-	String[] comboItemBook = { "---", "예약  이름 ", "호텔번호 ", "방 호수 ", "방 고유번호 " };
-	String[] comboItemRoom = { "---", "방  이름 ", "호텔번호 ", "방 호수 ", "방 고유번호 " };
-	String[] comboItemUser = { "---", "유저 이름 ", "호텔번호 ", "방 호수 ", "방 고유번호 " };
+	String[] comboItemHotel = { "---", "호텔이름", "호텔번호" };
+	String[] comboItemBook = { "---", "유저이름", "유저번호" };
+	String[] comboItemRoom = { "---", "방고유번호" }; // 방아이디 방호수 가격
+	String[] comboItemUser = { "---", "유저 이름", "유저 번호" };
 	private RoundedButton search;
 	private JTextField text;
-	
-	private JLabel Id;
-	private JLabel name;
-	private JLabel room;
-	private JLabel username;
+
+	private JLabel info;
+	private JLabel infonext;
+	private JLabel info_2;
+	private JLabel info_2next;
+	private JLabel info_3;
+	private JLabel info_3next;
+	private JLabel info_4;
+	private JLabel info_4next;
+	private JLabel info_5;
+	private JLabel info_5next;
 
 	private JLabel logo;
 
@@ -57,6 +71,7 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		setSize(600, 1300);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		logo = new JLabel(new ImageIcon("images/logo.png"));
+		goBack = new JButton(new ImageIcon("images/goback.png"));
 		combo = new JComboBox<>(comboItem);
 		combo2 = new JComboBox<>(comboItemNone);
 		text = new JTextField("");
@@ -65,6 +80,16 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		comboRoom = new JComboBox<>(comboItemRoom);
 		comboUser = new JComboBox<>(comboItemUser);
 		search = new RoundedButton("예약자 조회");
+		info = new JLabel();
+		infonext = new JLabel();
+		info_2 = new JLabel();
+		info_2next = new JLabel();
+		info_3 = new JLabel();
+		info_3next = new JLabel();
+		info_4 = new JLabel();
+		info_4next = new JLabel();
+		info_5 = new JLabel();
+		info_5next = new JLabel();
 
 	}
 
@@ -73,42 +98,56 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		setLayout(null);
 		// 1. 로고 메인 패널에 붙이기
 		this.getContentPane().setBackground(Color.white);
+
+		goBack.setBounds(0, 0, 70, 70);
+		goBack.setBorderPainted(false);
+		goBack.setContentAreaFilled(false);
+		this.getContentPane().add(goBack);
 		logo.setBounds(200, 0, 150, 100);
 		this.getContentPane().add(logo);
 
-		setCompo(combo, 35, 150, 500, 30);
-		setCompo(combo2, 35, 185, 80, 30);
-		setCompo(text, 120, 190, 400, 20);
+		setCompo(combo, 35, 150, 500, 20);
+		setCompo(combo2, 35, 185, 80, 20);
+		setCompo(text, 120, 186, 420, 20);
 
-		setCompo(comboHotel, 35, 185, 80, 30);
-
-		setCompo(comboBook, 35, 185, 80, 30);
-
-		setCompo(comboRoom, 35, 185, 80, 30);
-
-		setCompo(comboUser, 35, 185, 80, 30);
-
+		setCompo(comboHotel, 35, 185, 80, 20);
+		setCompo(comboBook, 35, 185, 80, 20);
+		setCompo(comboRoom, 35, 185, 80, 20);
+		setCompo(comboUser, 35, 185, 80, 20);
 		setCompo(search, 35, 450, 500, 70);
+
+		setCompo(info, 35, 220, 80, 20);
+		setCompo(info_2, 35, 250, 80, 20);
+		setCompo(info_3, 35, 280, 80, 20);
+		setCompo(info_4, 35, 310, 80, 20);
+		setCompo(info_5, 35, 340, 80, 20);
+		setCompo(infonext, 120, 220, 300, 20);
+		setCompo(info_2next, 120, 250, 300, 20);
+		setCompo(info_3next, 120, 280, 300, 20);
+		setCompo(info_4next, 120, 310, 300, 20);
+		setCompo(info_5next, 120, 340, 300, 20);
 
 	}
 
 	private void addActionListener() {
 
 		search.addActionListener(this);
+		goBack.addActionListener(this);
+
 		combo.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				Object getItem = e.getItem();
-				if (getItem == "호텔정보 조회 ") {
+				if (getItem == HOTEL) {
 					visible(false, false, false, false, true);
-				} else if (getItem == "예약정보 조회 ") {
+				} else if (getItem == BOOK) {
 					visible(false, true, false, false, false);
-				} else if (getItem == "방정보 조회 ") {
+				} else if (getItem == ROOM) {
 					visible(false, false, true, false, false);
-				} else if (getItem == "유저 조회 ") {
+				} else if (getItem == USER) {
 					visible(false, false, false, true, false);
-				}repaint();
+				}
+				repaint();
 
-				
 			}
 		});
 	}
@@ -119,9 +158,32 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		 * 
 		 *
 		 */
-
 		if (e.getSource() == search) {
+			if (combo.getSelectedItem().equals(HOTEL)) {
+				info.setText("호텔 번호");
+				info_2.setText("호텔 이름");
+				info_3.setText("보유 방의 수");
+				info_4.setText("총 예약 수");
+			} else if (combo.getSelectedItem().equals(BOOK)) {
+				info.setText("회원 번호");
+				info_2.setText("호텔 이름");
+				info_3.setText("방 호수");
+				info_4.setText("가격");
+			} else if (combo.getSelectedItem().equals(ROOM)) {
+				info.setText("방 고유 번호");
+				info_2.setText("방 호수 ");
+				info_3.setText("호텔이름");
+				info_4.setText("가격");
+			} else if (combo.getSelectedItem().equals(USER)) {
+				info.setText("유저 번호");
+				info_2.setText("유저 이름");
+				info_3.setText("전화번호");
+				info_4.setText("생년월일");
+			}
 
+		} else if (e.getSource() == goBack) {
+			dispose();
+			new MasterFrame();
 		}
 
 	}
@@ -139,8 +201,7 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		comboUser.setVisible(user);
 		comboHotel.setVisible(hotel);
 	}
-	
-	
+
 	public static void main(String[] args) {
 		new SearchBookFrame();
 

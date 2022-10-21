@@ -2,8 +2,8 @@ package bookHotel.interfaces;
 
 import java.util.List;
 
+import bookHotel.Frame.JoinFrame;
 import bookHotel.Frame.LoginFrame;
-import bookHotel.Frame.RoomDelFrame;
 import bookHotel.Frame.RoomUpdateFrame;
 import bookHotel.dto.ResponseInfo;
 import bookHotel.dto.ResquestInfo;
@@ -30,7 +30,7 @@ public interface IBookService {
 	boolean insertHotelInfo(ResquestInfo req);
 
 	// 회원가입
-	void signIn(ResquestInfo req);
+	void signIn(JoinFrame join);
 	
 	// 호텔 이름 수정하기
 	boolean hotelNameUpdate(String oldHotelName, String changeName);
