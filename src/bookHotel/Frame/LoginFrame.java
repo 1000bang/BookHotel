@@ -43,7 +43,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
 	// JScrollPane sp = new JScrollPane();
  
-	public LoginFrame() {
+	public LoginFrame() { 
 		initData();
 		setInitLayout();
 		addActionListener();

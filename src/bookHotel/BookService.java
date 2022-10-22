@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import bookHotel.Frame.BookFrame;
+import bookHotel.Frame.HotelUpdateFrame;
 import bookHotel.Frame.JoinFrame;
 import bookHotel.Frame.LoginFrame;
 import bookHotel.Frame.MainPageFrame;
@@ -188,8 +189,10 @@ public class BookService implements IBookService {
 	}
 	
 	
+	// 사용됨  
+	
 	public List<String> reservationList() {
-		String query1 = " select hotel.hotelName, reservation.roomNo from reservation \n"
+		String query1 = " select hotel.hotelName, reservation.roomNo, reservation.bookdate from reservation \n"
 				+ "join hotel\n"
 				+ "on hotel.hotelNo = reservation.hotelNo\n"
 				+ "where userNo = ? ";
@@ -202,9 +205,8 @@ public class BookService implements IBookService {
 			while(rs.next()) {
 				bookList.add(rs.getString("hotelName"));
 				bookList.add(rs.getString("roomNo"));
-
+				bookList.add(rs.getString("bookdate"));
 			}
-			
 			
 		} catch (SQLException e) {
 			
@@ -244,13 +246,14 @@ public class BookService implements IBookService {
 			}
 			System.out.println(hotelNo);
 
-			String query3 = "insert into reservation values (?, ?, ?, ?)";
+			String query3 = "insert into reservation values (?, ?, ?, ?, ?)";
 
 			psmt = dbHelper.getConnection().prepareStatement(query3);
 			psmt.setInt(1, lastNo + 1);
 			psmt.setInt(2, Integer.parseInt(book.getRoomNameText().getText()));
 			psmt.setInt(3, hotelNo);
 			psmt.setInt(4, Integer.parseInt(loginuserino.userNo));
+			psmt.setString(5, book.getReservationDate().getText());
 			System.out.println(psmt.toString());
 			psmt.executeUpdate();
 			JOptionPane.showMessageDialog(book, " 예약 성공 ");
@@ -443,8 +446,7 @@ public class BookService implements IBookService {
 			if (rs.next()) {
 				roomUpdateFrame.getRoomNoText().setText(rs.getString("roomNo"));
 				roomUpdateFrame.getHotelNoText().setText(rs.getString("hotelNo"));
-				roomUpdateFrame.getDayPriceText().setText(rs.getString("dayPrice"));
-				roomUpdateFrame.getNightPriceText().setText(rs.getString("nightPrice"));
+				roomUpdateFrame.getDayPriceText().setText(rs.getString("Price"));
 			} else {
 				JOptionPane.showMessageDialog(roomUpdateFrame, "일치하는 정보가 없습니다.");
 			}
@@ -458,7 +460,7 @@ public class BookService implements IBookService {
 
 	// 방정보 한방 수정하기 사용됨 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	@Override
-	public void updateRoom(String roomId, String newDayPrice, String newNightPrice, String newRoomNo) {
+	public void updateRoom(String roomId, String newDayPrice, String newRoomNo) {
 
 		try {
 			dbHelper.getConnection().setAutoCommit(false);
@@ -469,12 +471,6 @@ public class BookService implements IBookService {
 			psmt.setString(2, roomId);
 			psmt.executeUpdate();
 
-			// 숙박가격 수정
-			String query2 = "update room set nightPrice = ? where roomId = ?";
-			psmt = dbHelper.getConnection().prepareStatement(query2);
-			psmt.setString(1, newNightPrice);
-			psmt.setString(2, roomId);
-			psmt.executeUpdate();
 
 			// 룸번호 수정
 			String query3 = "update room set roomNo = ? where roomId = ?";
@@ -612,7 +608,7 @@ public class BookService implements IBookService {
 //		bookService.book(info);
 ////		
 	}
-
+// 사용
 	public void bookSearchByHotelName(SearchBookFrame searchBookFrame) {
 
 		String sql = " select h.hotelNo, h.hotelName, count(rs.reservationNumber) as \"총 예약수\","
@@ -761,6 +757,76 @@ public class BookService implements IBookService {
 		} finally {
 			closeAll();
 		}
+	}
+	
+	
+	public void hotelInfoSearch(HotelUpdateFrame update) {
+		String sql = " select * from hotel where hotelName like ? ";
+		
+		try {
+			psmt = dbHelper.getConnection().prepareStatement(sql);
+			psmt.setString(1, "%" + update.getHotelNameText().getText() + "%");
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+				update.getHotelNoText().setText(rs.getString("hotelNo"));;
+				update.getHotelAddressText().setText(rs.getString("address"));
+				update.getTelPhoneText().setText(rs.getString("telPhone"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll();
+		}
+	}
+	
+	public List<String> review () {
+		String sql = "select hotel.hotelName, rating, content from review\n"
+				+ "join hotel\n"
+				+ "on review.hotelNo = hotel.hotelNo\n"
+				+ "where userNo = ?";
+		List<String> listR = new ArrayList<>();
+		
+		try {
+			psmt = dbHelper.getConnection().prepareStatement(sql);
+			psmt.setString(1, loginuserino.userNo);
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+
+			listR.add(rs.getString("content")); 
+			
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll();
+		}
+		return listR;
+		
+	}
+	
+	public List<String> reviewH () {
+		String sql = "select hotel.hotelName, rating, content from review\n"
+				+ "join hotel\n"
+				+ "on review.hotelNo = hotel.hotelNo\n"
+				+ "where userNo = ?";
+		List<String> listH = new ArrayList<>();
+		
+		try {
+			psmt = dbHelper.getConnection().prepareStatement(sql);
+			psmt.setString(1, loginuserino.userNo);
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+			listH.add(rs.getString("hotelName"));
+		
+			
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeAll();
+		}
+		return listH;
+		
 	}
 
 	@Override

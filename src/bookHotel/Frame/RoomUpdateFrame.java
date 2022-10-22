@@ -51,7 +51,6 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 	private JLabel hotelNo;
 	private JLabel roomNo;
 	private JLabel dayPrice;
-	private JLabel nightPrice;
 
 	private JLabel warningHotelNo;
 	private JLabel warningHotelName;
@@ -62,7 +61,6 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 	private RoundedTextField hotelNoText;
 	private RoundedTextField roomNoText;
 	private RoundedTextField dayPriceText;
-	private RoundedTextField nightPriceText;
 
 	private RoundedButton update;
 	private RoundedButton search;
@@ -76,7 +74,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		initData();
 		setInitLayout();
 		addActionListener();
-	}
+	} 
 
 	private void initData() {
 		setTitle("LogIn");
@@ -87,14 +85,12 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		goBack = new JButton(new ImageIcon("images/goback.png"));
 		hotelNo = new JLabel("호텔 번호");
 		roomNo = new JLabel("호실 번호");
-		dayPrice = new JLabel("대실 가격 ");
-		nightPrice = new JLabel("숙박 가격 ");
+		dayPrice = new JLabel("가격 ");
 		roomId = new JLabel("방 고유번호 ");
 
 		hotelNoText = new RoundedTextField("");
 		roomNoText = new RoundedTextField("");
 		dayPriceText = new RoundedTextField("");
-		nightPriceText = new RoundedTextField("");
 		roomIdText = new RoundedTextField("");
 
 		update = new RoundedButton("수정하기");
@@ -132,25 +128,23 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		setLabel(hotelNo, 20, 260, 100, 20);
 		setLabel(roomNo, 20, 340, 100, 20);
 		setLabel(dayPrice, 20, 420, 100, 20);
-		setLabel(nightPrice, 20, 500, 100, 20);
 
 		setText(roomIdText, 20, 200, 500, 50);
 		setText(hotelNoText, 20, 280, 500, 50);
 		setText(roomNoText, 20, 360, 500, 50);
 		setText(dayPriceText, 20, 440, 500, 50);
-		setText(nightPriceText, 20, 520, 500, 50);
 
 		// 회원가입 버튼 +80
-		update.setBounds(20, 680, 500, 70);
+		update.setBounds(20, 600, 500, 70);
 		this.getContentPane().add(update);
 
-		search.setBounds(20, 600, 500, 70);
+		search.setBounds(20, 520, 500, 70);
 		this.getContentPane().add(search);
 
-		delete.setBounds(20, 760, 500, 70);
+		delete.setBounds(20, 680, 500, 70);
 		this.getContentPane().add(delete);
 
-		insert.setBounds(20, 840, 500, 70);
+		insert.setBounds(20, 760, 500, 70);
 		this.getContentPane().add(insert);
 
 	}
@@ -184,7 +178,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 			}
 		} // end of search button
 		else if (e.getSource() == update) {
-			bookService.updateRoom(roomIdText.getText(), dayPriceText.getText(), nightPriceText.getText(),
+			bookService.updateRoom(roomIdText.getText(), dayPriceText.getText(),
 					roomNoText.getText());
 		} else if (e.getSource() == delete) {
 

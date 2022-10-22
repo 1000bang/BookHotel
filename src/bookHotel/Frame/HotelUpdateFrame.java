@@ -13,10 +13,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+import bookHotel.BookService;
 import bookHotel.RoundedButton;
 import bookHotel.RoundedPass;
 import bookHotel.RoundedTextField;
 import bookHotel.utils.Define;
+import lombok.Getter;
+import lombok.Setter;
 
 /*
  * hotelNo int AI PK 
@@ -24,6 +27,8 @@ hotelName varchar(20)
 address varchar(30) 
 telPhone varchar(30)
  */
+@Getter
+@Setter
 public class HotelUpdateFrame extends JFrame implements ActionListener {
 
 	private JLabel logo;
@@ -46,6 +51,7 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 	private RoundedButton delete;
 	private RoundedButton insert;
 	private JButton goBack;
+	BookService bookservice;
 
 	public HotelUpdateFrame() {
 		initData();
@@ -80,7 +86,7 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 
 		warningMain = new JLabel(" * 조회할 때는 호텔 이름만 입력하세요 ");
 		warningMain_2 = new JLabel(" * 업데이트할 때는 호텔 번호를 비워두세요 ");
-
+		bookservice = new BookService();
 	}
 
 	private void setInitLayout() {
@@ -149,8 +155,8 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "호텔 번호로 " + Define.CANNOTSEARCH);
 			} else {
 				// 호텔 이름으로 호텔 정보 조회하기 메서드 호출
-
-				hotelNoText.setEnabled(false);
+				bookservice.hotelInfoSearch(this);
+			
 			}
 		} // end of search button
 		else if (e.getSource() == update) {

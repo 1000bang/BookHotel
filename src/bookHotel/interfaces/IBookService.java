@@ -77,7 +77,7 @@ public interface IBookService {
 	// 호텔 주소 수정하기
 	boolean hotelAddressUpdate(String hotelName, String changeAddress);
 
-	void updateRoom(String roomId, String newDayPrice, String newNightPrice, String newRoomNo);
+	void updateRoom(String roomId, String newDayPrice, String newRoomNo);
 
 	void searchRoom(RoomUpdateFrame roomUpdateFrame);
 

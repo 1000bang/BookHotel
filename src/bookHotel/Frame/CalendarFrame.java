@@ -45,7 +45,7 @@ public class CalendarFrame extends JFrame implements ActionListener {
 
 	DefaultComboBoxModel<Integer> monthModel = new DefaultComboBoxModel<Integer>();
 
-	// Center
+	// Center 
 
 	JPanel centerPane = new JPanel(new BorderLayout());
 
@@ -227,7 +227,7 @@ this.bookFrame = bookFrame;
 			yyyy = (String) yearCombo.getSelectedItem().toString();
 			mo = (String) monthCombo.getSelectedItem().toString();
 			
-			reservationDate = yyyy + "년 " + mo + "월 " + dayOut + "일 ";
+			reservationDate = yyyy + "-" + mo + "-" + dayOut ;
 			bookFrame.reservationDate.setText(reservationDate);
 			yearCombo.setSelectedItem(yy);
 			monthCombo.setSelectedItem(mm);
