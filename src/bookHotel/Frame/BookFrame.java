@@ -32,7 +32,7 @@ public class BookFrame extends JFrame implements ActionListener{
 	private JLabel roomName;
 	private JTextField roomNameText;
 	JLabel reservationDate;
-	
+	BookService book = new BookService();
 	JButton cal;
 	private JButton reservation ;
 	
@@ -115,7 +115,7 @@ public class BookFrame extends JFrame implements ActionListener{
 		if(e.getSource() == cal) {
 			new CalendarFrame(this);
 		}else if (e.getSource() == reservation) {
-			// 예약하기 메서드 실행
+			book.book(this);
 			
 		}
 		

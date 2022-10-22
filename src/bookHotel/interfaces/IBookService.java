@@ -2,6 +2,7 @@ package bookHotel.interfaces;
 
 import java.util.List;
 
+import bookHotel.Frame.BookFrame;
 import bookHotel.Frame.JoinFrame;
 import bookHotel.Frame.LoginFrame;
 import bookHotel.Frame.RoomUpdateFrame;
@@ -65,7 +66,7 @@ public interface IBookService {
 	void deleteHotel(int hotelNo);
 	
 	// 예약하다
-	void book(ResquestInfo req);
+	void book(BookFrame book);
 	
 
 	void signIn(JoinFrame join);

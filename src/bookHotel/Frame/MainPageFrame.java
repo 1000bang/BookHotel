@@ -13,6 +13,8 @@ import java.awt.RenderingHints;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -79,6 +81,8 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private JLabel userPhoneNumberLabel;
 	private JLabel userBirth;
 	private JLabel userBirth_Label;
+	private JLabel reservationList;
+	private JLabel reservationListLabel;
 
 	private JButton hotelPanelMain;
 	private JButton hotelPanelMainB;
@@ -89,6 +93,8 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private ImageIcon hotelPanel7;
 	private ImageIcon hotelPanel8;
 	LoginUserInfo loginuserino;
+	
+	BookService bookService = new BookService();
 
 	// JScrollPane sp = new JScrollPane(); 
 
@@ -145,6 +151,8 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		userPhoneNumberLabel = new JLabel("00230");
 		userBirth = new JLabel("생년월일");
 		userBirth_Label = new JLabel("12546");
+		reservationList = new JLabel("예약목록 ");
+		reservationListLabel = new JLabel("");
 
 	}
 
@@ -192,12 +200,12 @@ public class MainPageFrame extends JFrame implements ActionListener {
 
 		// review part
 
-		review(reviewLabel, 25, 20, 20, 300, 30);
-		review(writerLabel, 12, 20, 80, 80, 30);
-		review(writerLabel_1, 12, 110, 80, 300, 30);
-		review(hotelLabel, 12, 20, 120, 80, 30);
-		review(hotelLabel_1, 12, 110, 120, 300, 30);
-		review(contentslabel, 12, 20, 160, 300, 30);
+		setCompo(reviewLabel, 25, 20, 20, 300, 30);
+		setCompo(writerLabel, 12, 20, 80, 80, 30);
+		setCompo(writerLabel_1, 12, 110, 80, 300, 30);
+		setCompo(hotelLabel, 12, 20, 120, 80, 30);
+		setCompo(hotelLabel_1, 12, 110, 120, 300, 30);
+		setCompo(contentslabel, 12, 20, 160, 300, 30);
 
 		contentsField.setVisible(false);
 		contentsField.setBackground(new Color(224, 224, 224));
@@ -206,22 +214,25 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		panel.add(contentsField);
 
 		// userinfo
-		review(userInfomation, 25, 20, 20, 300, 30);
+		setCompo(userInfomation, 25, 20, 20, 300, 30);
 		
-		review(userNo, 15, 20, 100, 80, 30);
-		review(userNoLabel, 15, 110, 100, 300, 30);
-		review(userId, 15, 20, 140, 80, 30);
-		review(userIdLabel, 15, 110, 140, 300, 30);
-		review(userName, 15, 20, 180, 300, 30);
-		review(userNameLabel, 15, 110, 180, 300, 30);
-		review(userPhoneNumber, 15, 20, 220, 300, 30);
-		review(userPhoneNumberLabel, 15, 110, 220, 300, 30);
-		review(userBirth, 15, 20, 260, 300, 30);
-		review(userBirth_Label, 15, 110, 260, 300, 30);
+		setCompo(userNo, 15, 20, 100, 80, 30);
+		setCompo(userNoLabel, 15, 110, 100, 300, 30);
+		setCompo(userId, 15, 20, 140, 80, 30);
+		setCompo(userIdLabel, 15, 110, 140, 300, 30);
+		setCompo(userName, 15, 20, 180, 300, 30);
+		setCompo(userNameLabel, 15, 110, 180, 300, 30);
+		setCompo(userPhoneNumber, 15, 20, 220, 300, 30);
+		setCompo(userPhoneNumberLabel, 15, 110, 220, 300, 30);
+		setCompo(userBirth, 15, 20, 260, 300, 30);
+		setCompo(userBirth_Label, 15, 110, 260, 300, 30);
+		setCompo(reservationList, 15, 20, 300, 300, 30);
+		reservationListLabel.setVerticalAlignment(JLabel.TOP);
+		setCompo(reservationListLabel, 15, 20, 330, 300, 300);
 
 	}
 
-	private void review(JLabel label, int size, int x, int y, int w, int h) {
+	private void setCompo(JLabel label, int size, int x, int y, int w, int h) {
 		label.setVisible(false);
 		label.setFont(new Font(getName(), Font.BOLD, size));
 		label.setBounds(x, y, w, h);
@@ -268,6 +279,16 @@ public class MainPageFrame extends JFrame implements ActionListener {
 			hotelVisible(false);
 			reviewVisible(false);
 			userVisible(true);
+			List<String> bList = bookService.reservationList();
+			
+			for(int i = 0; i < bList.size(); i ++) {
+				String a = reservationListLabel.getText();
+				reservationListLabel.setText(a + bList.get(i));
+				if(i % 2 == 1) {
+					reservationListLabel.setText("<html><body>" + a + bList.get(i)+ "<br>");
+				}
+				
+			}
 			userNoLabel.setText(loginuserino.userNo);
 			userIdLabel.setText(loginuserino.id);
 			userNameLabel.setText(loginuserino.userName);
@@ -275,9 +296,9 @@ public class MainPageFrame extends JFrame implements ActionListener {
 			userBirth_Label.setText(loginuserino.useryear);
 
 		} else if (e.getSource() == hotelPanelMain) {
-			new BookFrame();
+			bookService.setHotelName(this);
 		}else if (e.getSource() == hotelPanelMainB) {
-			new BookFrame();
+			bookService.setHotelName(this);
 		}
 		repaint();
 
@@ -314,6 +335,8 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		userPhoneNumberLabel.setVisible(vis);
 		userBirth.setVisible(vis);
 		userBirth_Label.setVisible(vis);
+		reservationList.setVisible(vis);
+		reservationListLabel.setVisible(vis);
 
 	}
 
