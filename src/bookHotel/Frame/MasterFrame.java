@@ -110,9 +110,5 @@ public class MasterFrame extends JFrame implements ActionListener {
 		this.getContentPane().add(label);
 	}
 
-	public static void main(String[] args) {
-		new MasterFrame();
-
-	}
 
 }

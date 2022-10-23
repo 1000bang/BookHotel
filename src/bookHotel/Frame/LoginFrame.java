@@ -43,7 +43,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
 	// JScrollPane sp = new JScrollPane();
  
-	public LoginFrame() {
+	public LoginFrame() { 
 		initData();
 		setInitLayout();
 		addActionListener();
@@ -58,7 +58,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 		idLabel = new JLabel("아이디 ");
 		passWord = new JLabel("비밀번호");
 
-		id = new RoundedTextField("whwlgns");
+		id = new RoundedTextField("master");
 		pw = new RoundedPass("12345");
 
 		logIn = new RoundedButton(" 로그인");

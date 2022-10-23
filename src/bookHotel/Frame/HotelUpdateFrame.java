@@ -12,11 +12,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
+import bookHotel.BookService;
 import bookHotel.RoundedButton;
 import bookHotel.RoundedPass;
 import bookHotel.RoundedTextField;
 import bookHotel.utils.Define;
+import lombok.Getter;
+import lombok.Setter;
 
 /*
  * hotelNo int AI PK 
@@ -24,6 +28,8 @@ hotelName varchar(20)
 address varchar(30) 
 telPhone varchar(30)
  */
+@Getter
+@Setter
 public class HotelUpdateFrame extends JFrame implements ActionListener {
 
 	private JLabel logo;
@@ -40,12 +46,14 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 	private RoundedTextField hotelNameText;
 	private RoundedTextField hotelAddressText;
 	private RoundedTextField telPhoneText;
+	JTextField textField;
 
 	private RoundedButton update;
 	private RoundedButton search;
 	private RoundedButton delete;
 	private RoundedButton insert;
 	private JButton goBack;
+	BookService bookservice;
 
 	public HotelUpdateFrame() {
 		initData();
@@ -69,7 +77,7 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 		hotelNameText = new RoundedTextField("");
 		hotelAddressText = new RoundedTextField("");
 		telPhoneText = new RoundedTextField("");
-
+		textField = new JTextField("호텔이름 입력하고 조회 !!");
 		update = new RoundedButton("수정하기");
 		search = new RoundedButton("조회하기");
 		delete = new RoundedButton("삭제하기");
@@ -80,7 +88,7 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 
 		warningMain = new JLabel(" * 조회할 때는 호텔 이름만 입력하세요 ");
 		warningMain_2 = new JLabel(" * 업데이트할 때는 호텔 번호를 비워두세요 ");
-
+		bookservice = new BookService();
 	}
 
 	private void setInitLayout() {
@@ -107,11 +115,13 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 		setLabel(hotelAddress, 20, 340, 100, 20);
 		setLabel(telPhone, 20, 420, 100, 20);
 
-		setText(hotelNoText, 20, 200, 500, 50);
-		setText(hotelNameText, 20, 280, 500, 50);
-		setText(hotelAddressText, 20, 360, 500, 50);
-		setText(telPhoneText, 20, 440, 500, 50);
-
+		setText(hotelNoText, 20, 200, 500, 50, 20);
+		setText(hotelNameText, 20, 280, 500, 50, 20);
+		setText(hotelAddressText, 20, 360, 500, 50, 20);
+		setText(telPhoneText, 20, 440, 500, 50, 20);
+		setText(textField, 20, 160, 500, 20, 14);
+		
+		hotelNoText.setEnabled(false);
 		// 회원가입 버튼
 		update.setBounds(20, 600, 500, 70);
 		this.getContentPane().add(update);
@@ -139,26 +149,20 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == search) {
-			// 버튼을 누르면 데이터를 확인함 조건을 충족시키지 못하면 옵션창이 뜨고
-			// 충족되면 insert & option 회원가입에 성공하셨습니다 !!!!
-			if ((hotelNoText.getText().equals("")) == false) {
-				JOptionPane.showMessageDialog(this, "호텔 번호로 " + Define.CANNOTSEARCH);
-			} else if ((hotelAddressText.getText().equals("")) == false) {
-				JOptionPane.showMessageDialog(this, "호텔 주소로 " + Define.CANNOTSEARCH);
-			} else if ((telPhoneText.getText().equals("")) == false) {
-				JOptionPane.showMessageDialog(this, "호텔 번호로 " + Define.CANNOTSEARCH);
-			} else {
 				// 호텔 이름으로 호텔 정보 조회하기 메서드 호출
-
-				hotelNoText.setEnabled(false);
-			}
+				bookservice.hotelInfoSearch(this);
+			
+//			}
 		} // end of search button
 		else if (e.getSource() == update) {
+			//hotelNo, String newHotelName, String newAddress, String newTelPhone) {
 
+			bookservice.updateHotel(hotelNoText.getText(), hotelNameText.getText(), hotelAddressText.getText(),
+					telPhoneText.getText());
 		} else if (e.getSource() == delete) {
-
+			bookservice.deleteHotel(hotelNoText.getText());
 		} else if (e.getSource() == insert) {
-
+			bookservice.insertHotelInfo(this);
 		}else if (e.getSource() == goBack) {
 			dispose();
 			new MasterFrame();
@@ -172,15 +176,10 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 		label.setFont(new Font(getName(), Font.PLAIN, 15));
 	}
 
-	private void setText(RoundedTextField txt, int x, int y, int w, int h) {
+	private void setText(JTextField txt, int x, int y, int w, int h, int s) {
 		txt.setBounds(x, y, w, h);
 		this.getContentPane().add(txt);
-		txt.setFont(new Font(getName(), Font.PLAIN, 20));
-	}
-
-	public static void main(String[] args) {
-		new HotelUpdateFrame();
-
+		txt.setFont(new Font(getName(), Font.PLAIN, s));
 	}
 
 }

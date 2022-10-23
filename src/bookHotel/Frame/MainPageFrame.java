@@ -13,6 +13,9 @@ import java.awt.RenderingHints;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -23,6 +26,7 @@ import javax.swing.JComponent;
 import javax.swing.JComponent.AccessibleJComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -56,7 +60,14 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private RoundedButtonHere hotel;
 	private RoundedButtonHere review;
 	private RoundedButtonHere logout;
-
+	ImageIcon[] hotelImages = {new ImageIcon("images/hotel1.png"),new ImageIcon("images/hotel2.png"),new ImageIcon("images/hotel3.png")
+			,new ImageIcon("images/hotel4.png")
+			,new ImageIcon("images/hotel5.png")
+			,new ImageIcon("images/hotel6.png")
+			,new ImageIcon("images/hotel7.png")
+			,new ImageIcon("images/hotel8.png")
+			};
+	
 	// 리뷰란
 	private JLabel reviewLabel;
 	private JLabel writerLabel;
@@ -65,6 +76,8 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private JLabel hotelLabel_1;
 	private JLabel contentslabel;
 	private JTextArea contentsField;
+	private JButton reviewLeft;
+	private JButton reviewRight;
 
 	// 나의 정보란
 	private JLabel userInfomation;
@@ -79,6 +92,8 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private JLabel userPhoneNumberLabel;
 	private JLabel userBirth;
 	private JLabel userBirth_Label;
+	private JLabel reservationList;
+	private JLabel reservationListLabel;
 
 	private JButton hotelPanelMain;
 	private JButton hotelPanelMainB;
@@ -89,8 +104,10 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private ImageIcon hotelPanel7;
 	private ImageIcon hotelPanel8;
 	LoginUserInfo loginuserino;
+	int j = 0;
+	BookService bookService = new BookService();
 
-	// JScrollPane sp = new JScrollPane(); 
+	// JScrollPane sp = new JScrollPane();
 
 	public MainPageFrame() {
 		initData();
@@ -109,7 +126,7 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		panel = new JPanel();
 
 		hotelPanelMain = new JButton(new ImageIcon("images/hotel1.png"));
-		hotelPanelMainB = new JButton(new ImageIcon("images/hotel1.png"));
+		hotelPanelMainB = new JButton(new ImageIcon("images/hotel2.png"));
 		hotelPanel3 = new ImageIcon("images/hotel2.png");
 		hotelPanel4 = new ImageIcon("images/hotel2.png");
 		hotelPanel5 = new ImageIcon("images/hotel3.png");
@@ -131,20 +148,24 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		hotelLabel_1 = new JLabel("sdaf");
 		contentslabel = new JLabel("작성글 ");
 		contentsField = new JTextArea();
+		reviewLeft = new JButton("◀");
+		reviewRight = new JButton("▶");
 
 		// 나의정보란
 
 		userInfomation = new JLabel("나의 정보");
 		userNo = new JLabel("유저 번호");
-		userNoLabel = new JLabel("ㅁㄴㅇㄴㅁㅇ");
+		userNoLabel = new JLabel("");
 		userId = new JLabel("유저 ID");
-		userIdLabel = new JLabel("asdasd");
+		userIdLabel = new JLabel("");
 		userName = new JLabel("유저 이름");
-		userNameLabel = new JLabel("132165");
+		userNameLabel = new JLabel("");
 		userPhoneNumber = new JLabel("휴대폰 번호");
 		userPhoneNumberLabel = new JLabel("00230");
 		userBirth = new JLabel("생년월일");
-		userBirth_Label = new JLabel("12546");
+		userBirth_Label = new JLabel("");
+		reservationList = new JLabel("예약목록 ");
+		reservationListLabel = new JLabel("");
 
 	}
 
@@ -192,12 +213,18 @@ public class MainPageFrame extends JFrame implements ActionListener {
 
 		// review part
 
-		review(reviewLabel, 25, 20, 20, 300, 30);
-		review(writerLabel, 12, 20, 80, 80, 30);
-		review(writerLabel_1, 12, 110, 80, 300, 30);
-		review(hotelLabel, 12, 20, 120, 80, 30);
-		review(hotelLabel_1, 12, 110, 120, 300, 30);
-		review(contentslabel, 12, 20, 160, 300, 30);
+		setCompo(reviewLabel, 25, 20, 20, 300, 30);
+		setCompo(writerLabel, 12, 20, 80, 80, 30);
+		setCompo(writerLabel_1, 12, 110, 80, 300, 30);
+		setCompo(hotelLabel, 12, 20, 120, 80, 30);
+		setCompo(hotelLabel_1, 12, 110, 120, 300, 30);
+		setCompo(contentslabel, 12, 20, 160, 300, 30);
+
+		
+		reviewLeft.setContentAreaFilled(false);
+		reviewRight.setContentAreaFilled(false);
+		setCompo(reviewLeft, 15, 220, 170, 50, 30);
+		setCompo(reviewRight, 15, 265, 170, 50, 30);
 
 		contentsField.setVisible(false);
 		contentsField.setBackground(new Color(224, 224, 224));
@@ -206,22 +233,25 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		panel.add(contentsField);
 
 		// userinfo
-		review(userInfomation, 25, 20, 20, 300, 30);
-		
-		review(userNo, 15, 20, 100, 80, 30);
-		review(userNoLabel, 15, 110, 100, 300, 30);
-		review(userId, 15, 20, 140, 80, 30);
-		review(userIdLabel, 15, 110, 140, 300, 30);
-		review(userName, 15, 20, 180, 300, 30);
-		review(userNameLabel, 15, 110, 180, 300, 30);
-		review(userPhoneNumber, 15, 20, 220, 300, 30);
-		review(userPhoneNumberLabel, 15, 110, 220, 300, 30);
-		review(userBirth, 15, 20, 260, 300, 30);
-		review(userBirth_Label, 15, 110, 260, 300, 30);
+		setCompo(userInfomation, 25, 20, 20, 300, 30);
+
+		setCompo(userNo, 15, 20, 100, 80, 30);
+		setCompo(userNoLabel, 15, 110, 100, 300, 30);
+		setCompo(userId, 15, 20, 140, 80, 30);
+		setCompo(userIdLabel, 15, 110, 140, 300, 30);
+		setCompo(userName, 15, 20, 180, 300, 30);
+		setCompo(userNameLabel, 15, 110, 180, 300, 30);
+		setCompo(userPhoneNumber, 15, 20, 220, 300, 30);
+		setCompo(userPhoneNumberLabel, 15, 110, 220, 300, 30);
+		setCompo(userBirth, 15, 20, 260, 300, 30);
+		setCompo(userBirth_Label, 15, 110, 260, 300, 30);
+		setCompo(reservationList, 15, 20, 300, 300, 30);
+		reservationListLabel.setVerticalAlignment(JLabel.TOP);
+		setCompo(reservationListLabel, 15, 20, 330, 300, 300);
 
 	}
 
-	private void review(JLabel label, int size, int x, int y, int w, int h) {
+	private void setCompo(JComponent label, int size, int x, int y, int w, int h) {
 		label.setVisible(false);
 		label.setFont(new Font(getName(), Font.BOLD, size));
 		label.setBounds(x, y, w, h);
@@ -237,17 +267,34 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		logout.addActionListener(this);
 		hotelPanelMain.addActionListener(this);
 		hotelPanelMainB.addActionListener(this);
+		reviewLeft.addActionListener(this);
+		reviewRight.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		List<String> rList = bookService.review();
+		List<String> hList = bookService.reviewH();
+		Random random = new Random();
 		if (e.getSource() == moveLeft) {
-			hotelPanelMain.setIcon(hotelPanel3);
-			hotelPanelMainB.setIcon(hotelPanel5);
+			int a = random.nextInt(hotelImages.length);
+			if(a == 0) {
+				a ++;
+			}else if (a == hotelImages.length ) {
+				a --;
+			}
+			hotelPanelMain.setIcon(hotelImages[a]);
+			hotelPanelMainB.setIcon(hotelImages[a - 1]);
+			System.out.println(hotelPanelMainB.getText());
 		} else if (e.getSource() == moveRight) {
-			hotelPanelMain.setIcon(hotelPanel6);
-			hotelPanelMainB.setIcon(hotelPanel7);
+			int a = random.nextInt(hotelImages.length);	
+			if(a == 0) {
+				a ++;
+			}else if (a == hotelImages.length ) {
+				a --;
+			}
+			hotelPanelMain.setIcon(hotelImages[a]);
+			hotelPanelMainB.setIcon(hotelImages[a - 1]);
 
 		} else if (e.getSource() == logout) {
 			dispose();
@@ -258,16 +305,47 @@ public class MainPageFrame extends JFrame implements ActionListener {
 			userVisible(false);
 
 		} else if (e.getSource() == review) {
-			
 			hotelVisible(false);
 			reviewVisible(true);
 			userVisible(false);
 			writerLabel_1.setText(loginuserino.userName);
+			contentsField.setText(rList.get(j));
+			hotelLabel_1.setText(hList.get(j));
 
-		} else if (e.getSource() == userInfo) {
+		} else if (e.getSource() == reviewLeft) {
+			try {
+				j = j - 1;
+				hotelLabel_1.setText(hList.get(j));
+				contentsField.setText(rList.get(j));
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(this, "이전 글이 없습니다 .");
+			}
+
+		} else if (e.getSource() == reviewRight) {
+			try {
+				j = j + 1;
+				hotelLabel_1.setText(hList.get(j));
+				contentsField.setText(rList.get(j));
+				
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(this, "다음 글이 없습니다 .");
+			}
+		}
+
+		else if (e.getSource() == userInfo) {
 			hotelVisible(false);
 			reviewVisible(false);
 			userVisible(true);
+			List<String> bList = bookService.reservationList();
+
+			for (int i = 0; i < bList.size(); i++) {
+				String a = reservationListLabel.getText();
+				reservationListLabel.setText(a + bList.get(i)+ " / ");
+				if (i % 3 == 2) {
+					reservationListLabel.setText("<html><body>" + a + bList.get(i) + "<br>");
+				}
+
+			}
 			userNoLabel.setText(loginuserino.userNo);
 			userIdLabel.setText(loginuserino.id);
 			userNameLabel.setText(loginuserino.userName);
@@ -275,9 +353,9 @@ public class MainPageFrame extends JFrame implements ActionListener {
 			userBirth_Label.setText(loginuserino.useryear);
 
 		} else if (e.getSource() == hotelPanelMain) {
-			new BookFrame();
-		}else if (e.getSource() == hotelPanelMainB) {
-			new BookFrame();
+			bookService.setHotelName(this);
+		} else if (e.getSource() == hotelPanelMainB) {
+			bookService.setHotelName(this);
 		}
 		repaint();
 
@@ -292,6 +370,8 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		contentsField.setVisible(vis);
 		writerLabel_1.setVisible(vis);
 		hotelLabel_1.setVisible(vis);
+		reviewLeft.setVisible(vis);
+		reviewRight.setVisible(vis);
 	}
 
 	public void hotelVisible(boolean vis) {
@@ -314,6 +394,8 @@ public class MainPageFrame extends JFrame implements ActionListener {
 		userPhoneNumberLabel.setVisible(vis);
 		userBirth.setVisible(vis);
 		userBirth_Label.setVisible(vis);
+		reservationList.setVisible(vis);
+		reservationListLabel.setVisible(vis);
 
 	}
 
@@ -381,11 +463,6 @@ public class MainPageFrame extends JFrame implements ActionListener {
 			graphics.dispose();
 			super.paintComponent(g);
 		}
-	}
-
-	public static void main(String[] args) {
-		new MainPageFrame();
-
 	}
 
 }

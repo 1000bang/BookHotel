@@ -33,7 +33,7 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 	private final String HOTEL = "호텔정보 조회";
 	private final String BOOK = "예약정보 조회";
 	private final String ROOM = "방정보 조회";
-	private final String USER = "유저 조회"; 
+	private final String USER = "유저 조회";
 
 	private JComboBox<String> combo;
 	private JComboBox<String> combo2;
@@ -49,6 +49,7 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 	String[] comboItemUser = { "---", "유저 이름", "유저 번호" };
 	private RoundedButton search;
 	private JTextField textField;
+	private JTextField textField2;
 
 	private JLabel info;
 	private JLabel infonext;
@@ -82,6 +83,7 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		combo = new JComboBox<>(comboItem);
 		combo2 = new JComboBox<>(comboItemNone);
 		textField = new JTextField("");
+		textField2 = new JTextField("");
 		comboHotel = new JComboBox<>(comboItemHotel);
 		comboBook = new JComboBox<>(comboItemBook);
 		comboRoom = new JComboBox<>(comboItemRoom);
@@ -98,6 +100,7 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		info_5 = new JLabel();
 		info_5next = new JLabel();
 		bookService = new BookService();
+
 	}
 
 	private void setInitLayout() {
@@ -133,6 +136,7 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		setCompo(info_3next, 120, 280, 300, 20);
 		setCompo(info_4next, 120, 310, 300, 20);
 		setCompo(info_5next, 120, 340, 300, 20);
+		// setCompo(textField2, 120, 340, 300, 20);
 
 	}
 
@@ -187,8 +191,10 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 				info_4.setText("가격");
 				if (comboBook.getSelectedItem().equals("유저이름")) {
 					// 유저이름으로 검색
+					bookService.reservationSearchByUserName(this);
 				} else if (comboBook.getSelectedItem().equals("유저번호")) {
 					// 유저번호로 검색
+					bookService.reservationSearchByUserNo(this);
 				}
 			} else if (combo.getSelectedItem().equals(ROOM)) {
 				info.setText("방 고유 번호");
@@ -197,17 +203,21 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 				info_4.setText("가격");
 				if (comboRoom.getSelectedItem().equals("방고유번호")) {
 					// 방 번호 검색
+					bookService.roomInfoSearchByHotelNo(this);
 				}
-			}
-		} else if (combo.getSelectedItem().equals(USER)) {
-			info.setText("유저 번호");
-			info_2.setText("유저 이름");
-			info_3.setText("전화번호");
-			info_4.setText("생년월일");
-			if (comboUser.getSelectedItem().equals("유저 이름")) {
-				// 유저이름으로 검색
-			} else if (comboUser.getSelectedItem().equals("유저 번호")) {
-				// 유저번호로 검색
+			} else if (combo.getSelectedItem().equals(USER)) {
+				info.setText("유저 번호");
+				info_2.setText("유저 이름");
+				info_3.setText("전화번호");
+				info_4.setText("생년월일");
+				System.out.println("123");
+				if (comboUser.getSelectedItem().equals("유저 이름")) {
+					// 유저이름으로 검색
+					bookService.userInfoSearchByUserName(this);
+				} else if (comboUser.getSelectedItem().equals("유저 번호")) {
+					// 유저번호로 검색
+					bookService.userInfoSearchByUserNo(this);
+				}
 			}
 
 		} else if (e.getSource() == goBack) {
@@ -228,11 +238,6 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		comboRoom.setVisible(room);
 		comboUser.setVisible(user);
 		comboHotel.setVisible(hotel);
-	}
-
-	public static void main(String[] args) {
-		new SearchBookFrame();
-
 	}
 
 }

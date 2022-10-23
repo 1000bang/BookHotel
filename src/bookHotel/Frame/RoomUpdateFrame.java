@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import bookHotel.BookService;
 import bookHotel.RoundedButton;
@@ -51,7 +52,6 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 	private JLabel hotelNo;
 	private JLabel roomNo;
 	private JLabel dayPrice;
-	private JLabel nightPrice;
 
 	private JLabel warningHotelNo;
 	private JLabel warningHotelName;
@@ -61,9 +61,8 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 	private RoundedTextField roomIdText;
 	private RoundedTextField hotelNoText;
 	private RoundedTextField roomNoText;
-	private RoundedTextField dayPriceText;
-	private RoundedTextField nightPriceText;
-
+	private RoundedTextField priceText;
+	JTextField textField;
 	private RoundedButton update;
 	private RoundedButton search;
 	private RoundedButton delete;
@@ -87,16 +86,14 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		goBack = new JButton(new ImageIcon("images/goback.png"));
 		hotelNo = new JLabel("호텔 번호");
 		roomNo = new JLabel("호실 번호");
-		dayPrice = new JLabel("대실 가격 ");
-		nightPrice = new JLabel("숙박 가격 ");
+		dayPrice = new JLabel("가격 ");
 		roomId = new JLabel("방 고유번호 ");
 
 		hotelNoText = new RoundedTextField("");
 		roomNoText = new RoundedTextField("");
-		dayPriceText = new RoundedTextField("");
-		nightPriceText = new RoundedTextField("");
+		priceText = new RoundedTextField("");
 		roomIdText = new RoundedTextField("");
-
+		textField = new JTextField("방 고유번호 입력하고 조회 !!");
 		update = new RoundedButton("수정하기");
 		search = new RoundedButton("조회하기");
 		delete = new RoundedButton("삭제하기");
@@ -126,31 +123,30 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		warningMain.setForeground(Color.red);
 		warningMain_2.setForeground(Color.red);
 		setLabel(warningMain, 20, 100, 300, 20);
-		setLabel(warningMain_2, 20, 130, 300, 20);
+		setLabel(warningMain_2, 20, 130, 400, 20);
 
 		setLabel(roomId, 20, 180, 100, 20);
 		setLabel(hotelNo, 20, 260, 100, 20);
 		setLabel(roomNo, 20, 340, 100, 20);
 		setLabel(dayPrice, 20, 420, 100, 20);
-		setLabel(nightPrice, 20, 500, 100, 20);
 
-		setText(roomIdText, 20, 200, 500, 50);
-		setText(hotelNoText, 20, 280, 500, 50);
-		setText(roomNoText, 20, 360, 500, 50);
-		setText(dayPriceText, 20, 440, 500, 50);
-		setText(nightPriceText, 20, 520, 500, 50);
+		setText(roomIdText, 20, 200, 500, 50, 20);
+		setText(hotelNoText, 20, 280, 500, 50, 20);
+		setText(roomNoText, 20, 360, 500, 50, 20);
+		setText(priceText, 20, 440, 500, 50, 20);
+		setText(textField, 20, 155, 500, 20, 14);
 
 		// 회원가입 버튼 +80
-		update.setBounds(20, 680, 500, 70);
+		update.setBounds(20, 600, 500, 70);
 		this.getContentPane().add(update);
 
-		search.setBounds(20, 600, 500, 70);
+		search.setBounds(20, 520, 500, 70);
 		this.getContentPane().add(search);
 
-		delete.setBounds(20, 760, 500, 70);
+		delete.setBounds(20, 680, 500, 70);
 		this.getContentPane().add(delete);
 
-		insert.setBounds(20, 840, 500, 70);
+		insert.setBounds(20, 760, 500, 70);
 		this.getContentPane().add(insert);
 
 	}
@@ -161,35 +157,26 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		delete.addActionListener(this);
 		insert.addActionListener(this);
 		goBack.addActionListener(this);
-	} 
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == search) {
 			// 버튼을 누르면 데이터를 확인함 조건을 충족시키지 못하면 옵션창이 뜨고
 			// 충족되면 insert & option 회원가입에 성공하셨습니다 !!!!
-			if ((hotelNoText.getText().equals("")) == false) {
-				JOptionPane.showMessageDialog(this, "호텔 번호로 " + Define.CANNOTSEARCH);
-			} else if ((roomNoText.getText().equals("")) == false) {
-				JOptionPane.showMessageDialog(this, "방 번호로 " + Define.CANNOTSEARCH);
-			} else if ((dayPriceText.getText().equals("")) == false) {
-				JOptionPane.showMessageDialog(this, "가격으로 " + Define.CANNOTSEARCH);
-			} else if ((dayPriceText.getText().equals("")) == false) {
-				JOptionPane.showMessageDialog(this, "가격으로 " + Define.CANNOTSEARCH);
-			} else {
-				// 방번호로 호텔 정보 조회하기 메서드 호출
-				bookService.searchRoom(this);
-				hotelNoText.setEnabled(false);
-				roomIdText.setEnabled(false);
-			}
+
+			// 방번호로 호텔 정보 조회하기 메서드 호출
+			bookService.searchRoom(this);
+		
+			roomIdText.setEnabled(false);
+
 		} // end of search button
 		else if (e.getSource() == update) {
-			bookService.updateRoom(roomIdText.getText(), dayPriceText.getText(), nightPriceText.getText(),
-					roomNoText.getText());
+			bookService.updateRoom(roomIdText.getText(), priceText.getText(), roomNoText.getText());
 		} else if (e.getSource() == delete) {
-
+			bookService.deleteRoom(this);
 		} else if (e.getSource() == insert) {
-
+			bookService.insertRoom(this);
 		} else if (e.getSource() == goBack) {
 			dispose();
 			new MasterFrame();
@@ -202,14 +189,10 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		label.setFont(new Font(getName(), Font.PLAIN, 15));
 	}
 
-	private void setText(RoundedTextField txt, int x, int y, int w, int h) {
+	private void setText(JTextField txt, int x, int y, int w, int h, int s) {
 		txt.setBounds(x, y, w, h);
 		this.getContentPane().add(txt);
-		txt.setFont(new Font(getName(), Font.PLAIN, 20));
-	}
-
-	public static void main(String[] args) {
-		new RoomUpdateFrame();
+		txt.setFont(new Font(getName(), Font.PLAIN, s));
 	}
 
 }
