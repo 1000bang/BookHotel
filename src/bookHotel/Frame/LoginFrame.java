@@ -41,7 +41,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 	BookService bookService;
 	LoginUserInfo userInfo;
 
-	// JScrollPane sp = new JScrollPane();
  
 	public LoginFrame() { 
 		initData();
@@ -58,8 +57,8 @@ public class LoginFrame extends JFrame implements ActionListener {
 		idLabel = new JLabel("아이디 ");
 		passWord = new JLabel("비밀번호");
 
-		id = new RoundedTextField("master");
-		pw = new RoundedPass("12345");
+		id = new RoundedTextField("");
+		pw = new RoundedPass("");
 
 		logIn = new RoundedButton(" 로그인");
 		join = new RoundedButton(" 회원가입");
@@ -110,7 +109,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 		 *
 		*/
 		if (e.getSource() == logIn) {
-			dispose();
 			bookService.selectLoginInfo(this, userInfo);		
 		} else if (e.getSource() == join) {
 			dispose();

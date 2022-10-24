@@ -49,7 +49,6 @@ public class JoinFrame extends JFrame implements ActionListener {
 	private RoundedButton join;
 
 	BookService bookService;
-	// JScrollPane sp = new JScrollPane();
 
 	public JoinFrame() {
 		initData();
@@ -120,7 +119,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 		phoneNumber = new JLabel("전화번호");
 		birth = new JLabel("생년월일");
 
-		idText = new RoundedTextField(" ");
+		idText = new RoundedTextField("");
 		nameText = new RoundedTextField("");
 		phoneNumberText = new RoundedTextField("");
 		birthText = new RoundedTextField("");

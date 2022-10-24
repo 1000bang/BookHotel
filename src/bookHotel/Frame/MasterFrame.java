@@ -22,7 +22,6 @@ public class MasterFrame extends JFrame implements ActionListener {
 
 	private JLabel logo;
 	private JButton goBack;
-	// JScrollPane sp = new JScrollPane();
  
 	public MasterFrame() {
 		initData();
@@ -75,7 +74,7 @@ public class MasterFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		/*
-		 * 
+		 * 각 버튼의 프레임이 켜지면 창 닫기 dispose
 		 *
 		 */
 		if (e.getSource() == hotelUpdate) {

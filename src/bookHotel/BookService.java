@@ -36,7 +36,7 @@ public class BookService implements IBookService {
 		this.loginuserino = LoginUserInfo.getInstance();
 	}
 
-	// 사용됨 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 메인프레임 호텔이미지와 북프레임 연결
 	public void setHotelName(MainPageFrame main) {
 		String sql = "select hotelName \n" + "from hotel\n" + "where image = ?";
 		try {
@@ -50,7 +50,7 @@ public class BookService implements IBookService {
 				book.getHotelNameText().setText(rs.getString("hotelName"));
 
 			} else {
-				System.out.println("123");
+				JOptionPane.showMessageDialog(main, "해당 호텔 정보가 없습니다.");
 			}
 
 		} catch (SQLException e) {
@@ -68,7 +68,8 @@ public class BookService implements IBookService {
 		}
 	}
 
-	@Override // 사용됨 !!!!!!!!!!!!!!!!!!!!!!!!!
+	@Override
+	// 로그인프레임 아이디 비밀번호
 	public void selectLoginInfo(LoginFrame loginFrame, LoginUserInfo userInfo) {
 
 		String sql = "SELECT * FROM userinfo where Id = ?  and password = ? ";
@@ -92,9 +93,11 @@ public class BookService implements IBookService {
 				if (rs.getString(2).equals("master")) {
 					new MasterFrame();
 					loginFrame.dispose();
+					JOptionPane.showMessageDialog(loginFrame, "관리자 계정으로 로그인합니다.");
 				} else {
 					loginFrame.dispose();
 					new MainPageFrame();
+					JOptionPane.showMessageDialog(loginFrame, "로그인 성공.");
 				}
 
 			} else {
@@ -117,16 +120,11 @@ public class BookService implements IBookService {
 
 	}
 
-	// 회원가입 사용됨 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 회원가입 insert
 	@Override
 	public void signIn(JoinFrame join) {
 		String signInSql = " insert into userInfo(id, password, userName, userPhoneNumber, userYear) "
 				+ " values(?,?,?,?,?) ";
-		/*
-		 * private RoundedTextField idText; private RoundedPass pwText; private
-		 * RoundedPass pwcheck; private RoundedTextField nameText; private
-		 * RoundedTextField phoneNumberText; private RoundedTextField birthText;
-		 */
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(signInSql);
 			psmt.setString(1, join.getIdText().getText());
@@ -135,6 +133,7 @@ public class BookService implements IBookService {
 			psmt.setString(4, join.getPhoneNumberText().getText());
 			psmt.setString(5, join.getBirthText().getText());
 			psmt.executeUpdate();
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -148,43 +147,7 @@ public class BookService implements IBookService {
 		}
 	}
 
-	// ???????????
-	// Request : insert , update,
-	// Response : select
-	@Override // 유저 정보 전체 조회
-	public List<ResponseInfo> selectAllUserInfo() {
-		String sql = " 	select * from userinfo ";
-
-		List<ResponseInfo> userList = new ArrayList<>();
-
-		try {
-			psmt = dbHelper.getConnection().prepareStatement(sql);
-			rs = psmt.executeQuery();
-
-			int count = 0;
-			while (rs.next()) {
-				count++;
-				ResponseInfo info = new ResponseInfo();
-				info.setUserNo(rs.getString("userNo"));
-				info.setId(rs.getString("id"));
-				info.setPassword(rs.getString("password"));
-				info.setUserName(rs.getString("userName"));
-				info.setUserPhoneNumber(rs.getString("userPhoneNumber"));
-				info.setUserYear(rs.getString("userYear"));
-				userList.add(info);
-			}
-			System.out.println("count 확인 " + count);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			closeAll();
-		}
-
-		return userList;
-	}
-
-	// 사용됨
-
+	// 메인페이지 내 정보 예약목록
 	public List<String> reservationList() {
 		String query1 = " select hotel.hotelName, reservation.roomNo, reservation.checkinDate from reservation \n"
 				+ "join hotel\n" + "on hotel.hotelNo = reservation.hotelNo\n" + "where userNo = ? ";
@@ -209,7 +172,8 @@ public class BookService implements IBookService {
 		return bookList;
 	}
 
-	@Override // 예약하기 //사용됨 주석 지워도됨!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	@Override
+	// 예약하기 북프레임
 	public void book(BookFrame book) {
 		boolean flag = true;
 
@@ -224,7 +188,6 @@ public class BookService implements IBookService {
 				lastNo = (rs.getInt("reservationNumber"));
 
 			}
-			System.out.println(lastNo);
 
 			// 호텔 넘버 가져오기
 
@@ -249,7 +212,7 @@ public class BookService implements IBookService {
 			System.out.println(psmt.toString());
 			psmt.executeUpdate();
 			JOptionPane.showMessageDialog(book, " 예약 성공 ");
-
+			book.dispose();
 			dbHelper.getConnection().commit(); // db에 반영 (테스트시 주석처리!!!)
 			dbHelper.getConnection().setAutoCommit(true); // 원상복구
 		} catch (SQLException e) {
@@ -266,7 +229,7 @@ public class BookService implements IBookService {
 		}
 	}
 
-	// 호텔 정보 저장하기 (트랜잭션)
+	// 호텔 정보 insert (트랜잭션)
 	@Override
 	public boolean insertHotelInfo(HotelUpdateFrame hotel) {
 		boolean flag = true;
@@ -281,8 +244,7 @@ public class BookService implements IBookService {
 			if (rs.next()) {
 				lastNo = (rs.getInt("hotelNo"));
 			}
-//			(hotelNo, hotelName, address, telPhone )
-			// hotel 정보 저장하기
+
 			String hotelSql = "insert into hotel (hotelNo, hotelName, address, telPhone) values " + " (?,?, ?, ?) ";
 			psmt = dbHelper.getConnection().prepareStatement(hotelSql);
 			psmt.setInt(1, lastNo + 1);
@@ -291,11 +253,11 @@ public class BookService implements IBookService {
 			psmt.setString(4, hotel.getTelPhoneText().getText());
 			psmt.executeUpdate();
 
-			JOptionPane.showMessageDialog(hotel, "추가 성공.");
+			JOptionPane.showMessageDialog(hotel, "호텔 정보 추가 성공.");
 			dbHelper.getConnection().commit(); // db에 반영 (테스트시 주석처리!!!)
 			dbHelper.getConnection().setAutoCommit(true); // 원상복구
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(hotel, "추가 실패.");
+			JOptionPane.showMessageDialog(hotel, "호텔 정보 추가 실패.");
 			try {
 				dbHelper.getConnection().rollback();
 				System.out.println("롤백했습니다.");
@@ -311,7 +273,7 @@ public class BookService implements IBookService {
 		return flag;
 	}
 
-	// 사용됨 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 방정보 조회 ID를 통한 book frame
 
 	@Override
 	public void searchRoom(RoomUpdateFrame roomUpdateFrame) {
@@ -339,9 +301,9 @@ public class BookService implements IBookService {
 
 	}
 
-	// 방정보 한방 수정하기 사용됨 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 방정보 수정하기 book frame
 	@Override
-	public void updateRoom(String roomId, String newDayPrice, String newRoomNo) {
+	public void updateRoom(String roomId, String newDayPrice, String newRoomNo, RoomUpdateFrame room) {
 
 		try {
 			dbHelper.getConnection().setAutoCommit(false);
@@ -361,8 +323,9 @@ public class BookService implements IBookService {
 
 			dbHelper.getConnection().commit(); // 실제 데이터 베이스에 반영
 			dbHelper.getConnection().setAutoCommit(true); // 오토커밋 원상태로 돌려놓는 것을 권장
-
+			JOptionPane.showMessageDialog(room, "방 정보 수정 완료.");
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(room, "수정 실패 오류를 확인하세요.");
 			try {
 
 				dbHelper.getConnection().rollback();
@@ -382,9 +345,10 @@ public class BookService implements IBookService {
 
 	}
 
-	// 호텔 정보 한방 수정
+	// 호텔 정보 수정 hotel Frame
 	@Override
-	public void updateHotel(String hotelNo, String newHotelName, String newAddress, String newTelPhone) {
+	public void updateHotel(String hotelNo, String newHotelName, String newAddress, String newTelPhone,
+			HotelUpdateFrame hotel) {
 
 		try {
 			dbHelper.getConnection().setAutoCommit(false);
@@ -400,8 +364,9 @@ public class BookService implements IBookService {
 
 			dbHelper.getConnection().commit(); // 실제 데이터 베이스에 반영
 			dbHelper.getConnection().setAutoCommit(true); // 오토커밋 원상태로 돌려놓는 것을 권장
-
+			JOptionPane.showMessageDialog(hotel, "수정 성공");
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(hotel, "수정 실패 오류를 확인하세요 ");
 			try {
 				dbHelper.getConnection().rollback();
 			} catch (SQLException e1) {
@@ -420,9 +385,10 @@ public class BookService implements IBookService {
 
 	}
 
-	@Override // 호텔번호(Pk)로 모든 테이블 호텔 정보 삭제하기
-	// 사용됨hotelupdateframe - delete
-	public void deleteHotel(String hotelNo) {
+	@Override
+	// 호텔번호(Pk)로 모든 테이블 호텔 정보 삭제하기
+	// hotel update frame - delete
+	public void deleteHotel(String hotelNo, HotelUpdateFrame hotel) {
 
 		boolean flag = true;
 		try {
@@ -449,9 +415,9 @@ public class BookService implements IBookService {
 
 			dbHelper.getConnection().commit();
 			dbHelper.getConnection().setAutoCommit(true);
-
+			JOptionPane.showMessageDialog(hotel, "삭제 완료.");
 		} catch (SQLException e) {
-
+			JOptionPane.showMessageDialog(hotel, "삭제 실패 오류를 확인하세요 ");
 			e.printStackTrace();
 		} finally {
 			try {
@@ -464,49 +430,13 @@ public class BookService implements IBookService {
 		}
 	}
 
-	public static void main(String[] args) {
-		BookService bookService = new BookService();
-		ResquestInfo info = new ResquestInfo();
-//		List<ResponseInfo> list = bookService.bookSearchByHotelName("브라운도트");
-//		List<ResponseInfo> list = bookService.bookSearchByHotelName("2");
-//		List<ResponseInfo> list = bookService.reservationSearchByUserName("천병재");
-
-		// 유저 전체 조회
-//		List<ResponseInfo> list = bookService.selectAllUserInfo();
-//		for (int i = 0; i < list.size(); i++) {
-//			System.out.println(list.get(i));
-//		}
-
-		// 숙소 정보 입력
-//		info.setHotelName("테스트모텔102");
-//		info.setAddress("테스트구102");
-//		info.setTelPhone("1221-12212-9999");
-//		
-//		// 방정보 입력
-//		info.setRoomNo(12202);
-//		info.setDayPrice(5220000);
-//		info.setNightPrice(1520000);
-//		
-//		bookService.insertHotelInfo(info);
-
-//		info.setHotelNo(2);
-//		info.setRoomNo(2);
-//		info.setUserNo(1);
-//		info.getCheckInDate();
-//		bookService.book(info);
-////		
-	}
-
-// 사용
-
+	// Search Frame 호텔이름으로 예약조회
 	public void bookSearchByHotelName(SearchBookFrame searchBookFrame) {
 
 		String sql = " select hotelNo, hotelName, "
 				+ " (select count(roomNo) from reservation where hotelName like ?) as \"총 예약수\", "
 				+ " (select count(roomNo) from room as r join hotel as h on h.hotelNo = r.hotelNO where h.hotelName like ? ) as \"보유 방의 수\" "
 				+ " from hotel " + " where hotelName like ?  ";
-
-//        List<ResponseInfo> list = new ArrayList<>();
 
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(sql);
@@ -529,24 +459,9 @@ public class BookService implements IBookService {
 
 	}
 
-	// 홍텔 정보 한반 수정 테스트 확인
-//		 bookService.updateHotel("4", "그냥", "1왜되지", "77-7777-7777");
-
-	// 삭제기능 테스트 확인
-//		bookService.deleteHotel(1);
-
-	// 호텔 이름 수정하기(확인 후 삭제)
-//		boolean result =  bookService.hotelNameUpdate("테스트모텔1" ,"안녕모텔");
-//		System.out.println("result : " + result);
-//		bookService.hotelNameUpdate("테스트모텔1" ,"안녕모텔");
-
-	// 호텔번호로 (호텔 번호, 호텔 이름, 보유방의 수, 총예약 수) 조회하기 (1행)
+	// Search Frame 호텔 번호로 예약조회
 	@Override
 	public void bookSearchByHotelNo(SearchBookFrame searchBookFrame) {
-//        String sql = " select h.hotelNo, h.hotelName, count(rs.reservationNumber) as "총 예약수","
-//                + " (select count(roomNo) from room as r join hotel as h on h.hotelNo = r.hotelNo ) as "보유 방의 수" "
-//                + " from reservation rs " + " join hotel as h " + " on h.hotelNo = rs.hotelNO "
-//                + " where h.hotelNo = ? limit 1";
 
 		String sql = " select hotelNo, hotelName, "
 				+ " (select count(roomNo) from reservation where hotelNo = ? ) as \"총 예약수\", "
@@ -574,6 +489,7 @@ public class BookService implements IBookService {
 
 	}
 
+	// Search Frame
 	// 회원이름으로 (회원번호, 호텔이름, 방 호수, 가격) 조회하기 (예약 현황) (다중행)
 	@Override
 	public void reservationSearchByUserName(SearchBookFrame searchBookFrame) {
@@ -601,7 +517,8 @@ public class BookService implements IBookService {
 		}
 	}
 
-	// 회원번호로 (회원번호, 호텔이름, 방 호수, 가격) 조회하기 (예약 현황) (다중행)
+	// Search Frame
+	// 회원번호로 (회원번호, 호텔이름, 방 호수, 가격) 조회하기 (예약 현황)
 	@Override
 	public void reservationSearchByUserNo(SearchBookFrame searchBookFrame) {
 		String sql = " select u.userNo, h.hotelName, r.roomNo, r.price from reservation as rs "
@@ -626,13 +543,12 @@ public class BookService implements IBookService {
 		}
 	}
 
+	// Search Frame
 	// 방Id(방Id, 호수, 호텔이름, 가격) (다중행)
 	@Override
 	public void roomInfoSearchByHotelNo(SearchBookFrame searchBookFrame) {
-		String sql = " select r.roomId, r.roomNo, h.hotelName, r.price from reservation as rs "
-				+ " join userInfo as u on rs.userNo = u.userNo  join hotel as h "
-				+ " on rs.hotelNo = h.hotelNo join room as r  on h.hotelNo = r.hotelNo "
-				+ " where r.roomId = ? group by r.roomId ";
+		String sql = "select r.roomId, roomNo, h.hotelName, r.price \r\n" + "from hotel as h join room as r\r\n"
+				+ "on h.hotelNo = r.hotelNo\r\n" + "where roomId = ?";
 
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(sql);
@@ -651,6 +567,8 @@ public class BookService implements IBookService {
 		}
 	}
 
+	// room Frame
+	// 방정보 insert
 	@Override
 	public void insertRoom(RoomUpdateFrame roomUpdateFrame) {
 
@@ -675,6 +593,7 @@ public class BookService implements IBookService {
 
 			dbHelper.getConnection().commit(); // db에 반영 (테스트시 주석처리!!!)
 			dbHelper.getConnection().setAutoCommit(true); // 원상복구
+			JOptionPane.showMessageDialog(roomUpdateFrame, "호텔 정보 추가 성공");
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(roomUpdateFrame, "일치하는 호텔이 없습니다.");
 			try {
@@ -690,6 +609,8 @@ public class BookService implements IBookService {
 		}
 	}
 
+	// HotelFrame
+	// 호텔이름으로 호텔정보 검색
 	public void hotelInfoSearch(HotelUpdateFrame update) {
 		String sql = " select * from hotel where hotelName like ? ";
 
@@ -702,14 +623,20 @@ public class BookService implements IBookService {
 				update.getHotelNameText().setText(rs.getString("hotelName"));
 				update.getHotelAddressText().setText(rs.getString("address"));
 				update.getTelPhoneText().setText(rs.getString("telPhone"));
+			}else {
+				JOptionPane.showMessageDialog(update, "<html><body>" +"해당 호텔 정보가 없습니다."+ "<br>"
+						+ "호텔이름으로 검색하세요 !!");
+				
 			}
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(update, "일치하는 정보가 없습니다.");
 			e.printStackTrace();
 		} finally {
 			closeAll();
 		}
 	}
 
+	// 나의 리뷰 리뷰 리스트
 	public List<String> review() {
 		String sql = "select hotel.hotelName, rating, content from review\n" + "join hotel\n"
 				+ "on review.hotelNo = hotel.hotelNo\n" + "where userNo = ?";
@@ -733,6 +660,7 @@ public class BookService implements IBookService {
 
 	}
 
+	// 나의 리뷰 호텔 이름
 	public List<String> reviewH() {
 		String sql = "select hotel.hotelName, rating, content from review\n" + "join hotel\n"
 				+ "on review.hotelNo = hotel.hotelNo\n" + "where userNo = ?";
@@ -755,12 +683,12 @@ public class BookService implements IBookService {
 
 	}
 
+	// search Frame
+	// 유저이름으로 유저 정보검색
 	@Override
 	public void userInfoSearchByUserName(SearchBookFrame searchBookFrame) {
 
 		String sql = " select * " + "from userInfo " + "where userName like ? ";
-
-//        List<ResponseInfo> list = new ArrayList<>();
 
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(sql);
@@ -780,7 +708,9 @@ public class BookService implements IBookService {
 		}
 	}
 
+	// Search Book Frame
 	// d유저번호 유저이름 전화번호 생년월일
+	// 유저 번호로 유저정보 검색
 	@Override
 	public void userInfoSearchByUserNo(SearchBookFrame searchBookFrame) {
 		String sql = " select * from userInfo where userNo = ? ";
@@ -805,6 +735,8 @@ public class BookService implements IBookService {
 		}
 	}
 
+	// Room Update Frame
+	// 방정보 삭제
 	@Override
 	public void deleteRoom(RoomUpdateFrame room) {
 
@@ -827,8 +759,9 @@ public class BookService implements IBookService {
 			}
 
 		}
-	};
+	}
 
+	// 전체 닫기 메서드
 	public void closeAll() {
 		try {
 			rs.close();

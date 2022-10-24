@@ -14,16 +14,6 @@ import bookHotel.dto.ResquestInfo;
 
 public interface IBookService {
 
-	/*
-	 * List<ResponseInfo> selectAllInfo(); List<ResponseInfo> selectUserInfo();
-	 * List<ResponseInfo> selectHotelInfo(); List<ResponseInfo>
-	 * selectBookInfoByUserName(String userName);
-	 * 
-	 * boolean insertHotel(RequestHotel requestHotel); void updateHotel(String
-	 * oldPrice, String newPrice); void deleteHotel(int hotelNo);
-	 * 
-	 */
-
 	// 호텔이름으로 (호텔 번호, 호텔 이름, 보유방의 수, 총예약 수) 조회하기 (1행)
 	void bookSearchByHotelName(SearchBookFrame searchBookFrame);
 
@@ -48,18 +38,15 @@ public interface IBookService {
 
 	void selectLoginInfo(LoginFrame login, LoginUserInfo userInfo);
 
-	// 유저 정보 전체 조회
-	List<ResponseInfo> selectAllUserInfo();
-
 	// 호텔 정보 저장하기
 	boolean insertHotelInfo(HotelUpdateFrame hotel);
 
 	
 	// 호텔 정보 수정하기
-	void updateHotel(String hotelNo, String newHotelName, String newAddress, String newTelPhone);
+	void updateHotel(String hotelNo, String newHotelName, String newAddress, String newTelPhone, HotelUpdateFrame hotel);
 	
 	// 호텔 정보 삭제하기
-	void deleteHotel(String hotelNo);
+	void deleteHotel(String hotelNo, HotelUpdateFrame hotel);
 	
 	void deleteRoom(RoomUpdateFrame room);
 	
@@ -70,7 +57,7 @@ public interface IBookService {
 	void signIn(JoinFrame join);
 
 
-	void updateRoom(String roomId, String newDayPrice, String newRoomNo);
+	void updateRoom(String roomId, String newDayPrice, String newRoomNo, RoomUpdateFrame room);
 
 	void searchRoom(RoomUpdateFrame roomUpdateFrame);
 

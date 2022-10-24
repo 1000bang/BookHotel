@@ -52,7 +52,7 @@ public class BookFrame extends JFrame implements ActionListener{
 		roomName = new JLabel(" 방 번호 ");
 		roomNameText = new JTextField();
 		cal = new JButton("날짜 선택 ");
-		reservationDate = new JLabel("123");
+		reservationDate = new JLabel("");
 		
 		reservation = new JButton(new ImageIcon("images/bookButton.png"));
 		
@@ -66,18 +66,6 @@ public class BookFrame extends JFrame implements ActionListener{
 		this.getContentPane().setBackground(Color.white);
 		logo.setBounds(200, 0, 150, 100);
 		this.add(logo);
-		
-		
-		/*
-		 * hotelName = new JLabel();
-		hotelNameText = new JLabel();
-		roomName = new JLabel();
-		roomNameText = new JTextField();
-		cal = new JButton("날짜 선택 ");
-		reservationDate = new JLabel("123");
-		
-		reservaiton = new JButton(new ImageIcon("images/bookButton.png"));
-		 */
 		
 		setCompo(hotelName, 60, 150, 100, 20);
 		hotelName.setFont(new Font(getName(), Font.BOLD, 15));

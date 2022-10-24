@@ -7,13 +7,13 @@ import java.sql.Statement;
 
 public class DBHelper {
 
-	private static final String DB_HOST = "localhost";
+	private static final String DB_HOST = "192.168.7.96";
 	private static final int DB_PORT = 3306;
 	private static final String DB_DATABASE_NAME = "yanolja";
 
 	
 	private static final String DB_CHARSET = "UTF-8";
-	private static final String DB_USER_NAME = "root";
+	private static final String DB_USER_NAME = "tester";
 	//비번 바꿔 !
 	private static final String DB_PASSWORD = "dlfdl123";
 

@@ -95,12 +95,12 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 		setVisible(true);
 		setLayout(null);
 		getContentPane().setBackground(Color.white);
-		
-		goBack.setBounds(0,0,70,70);
+
+		goBack.setBounds(0, 0, 70, 70);
 		goBack.setBorderPainted(false);
 		goBack.setContentAreaFilled(false);
 		this.getContentPane().add(goBack);
-		
+
 		logo.setBounds(200, 0, 150, 100);
 		this.getContentPane().add(logo);
 
@@ -120,7 +120,7 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 		setText(hotelAddressText, 20, 360, 500, 50, 20);
 		setText(telPhoneText, 20, 440, 500, 50, 20);
 		setText(textField, 20, 160, 500, 20, 14);
-		
+
 		hotelNoText.setEnabled(false);
 		// 회원가입 버튼
 		update.setBounds(20, 600, 500, 70);
@@ -149,21 +149,17 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == search) {
-				// 호텔 이름으로 호텔 정보 조회하기 메서드 호출
-				bookservice.hotelInfoSearch(this);
-			
-//			}
+			// 호텔 이름으로 호텔 정보 조회하기 메서드 호출
+			bookservice.hotelInfoSearch(this);
 		} // end of search button
 		else if (e.getSource() == update) {
-			//hotelNo, String newHotelName, String newAddress, String newTelPhone) {
-
 			bookservice.updateHotel(hotelNoText.getText(), hotelNameText.getText(), hotelAddressText.getText(),
-					telPhoneText.getText());
+					telPhoneText.getText(), this);
 		} else if (e.getSource() == delete) {
-			bookservice.deleteHotel(hotelNoText.getText());
+			bookservice.deleteHotel(hotelNoText.getText(), this);
 		} else if (e.getSource() == insert) {
 			bookservice.insertHotelInfo(this);
-		}else if (e.getSource() == goBack) {
+		} else if (e.getSource() == goBack) {
 			dispose();
 			new MasterFrame();
 		}

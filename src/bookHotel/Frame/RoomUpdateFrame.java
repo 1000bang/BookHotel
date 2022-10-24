@@ -172,7 +172,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 
 		} // end of search button
 		else if (e.getSource() == update) {
-			bookService.updateRoom(roomIdText.getText(), priceText.getText(), roomNoText.getText());
+			bookService.updateRoom(roomIdText.getText(), priceText.getText(), roomNoText.getText(), this);
 		} else if (e.getSource() == delete) {
 			bookService.deleteRoom(this);
 		} else if (e.getSource() == insert) {

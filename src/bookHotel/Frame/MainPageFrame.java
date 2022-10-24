@@ -107,7 +107,6 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	int j = 0;
 	BookService bookService = new BookService();
 
-	// JScrollPane sp = new JScrollPane();
 
 	public MainPageFrame() {
 		initData();
@@ -337,7 +336,7 @@ public class MainPageFrame extends JFrame implements ActionListener {
 			reviewVisible(false);
 			userVisible(true);
 			List<String> bList = bookService.reservationList();
-
+			reservationListLabel.setText("");
 			for (int i = 0; i < bList.size(); i++) {
 				String a = reservationListLabel.getText();
 				reservationListLabel.setText(a + bList.get(i)+ " / ");
