@@ -65,13 +65,13 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 	private JLabel logo;
 	BookService bookService;
 	ResponseInfo responseInfo;
-	// JScrollPane sp = new JScrollPane();
-
+	
 	public SearchBookFrame() {
 		initData();
 		setInitLayout();
 		addActionListener();
-		// responseInfo.getInstance();
+		this.bookService = BookService.getInstance();
+
 	}
 
 	private void initData() {
@@ -99,7 +99,6 @@ public class SearchBookFrame extends JFrame implements ActionListener {
 		info_4next = new JLabel();
 		info_5 = new JLabel();
 		info_5next = new JLabel();
-		bookService = new BookService();
 
 	}
 

@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import bookHotel.BookService;
 import bookHotel.RoundedButton;
 import bookHotel.RoundedTextField;
-import bookHotel.Frame.MainPageFrame.RoundedButtonHere;
+import bookHotel.Frame.UserHomeFrame.RoundedButtonHere;
 import bookHotel.utils.Define;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +32,7 @@ public class BookFrame extends JFrame implements ActionListener{
 	private JLabel roomName;
 	private JTextField roomNameText;
 	JLabel reservationDate;
-	BookService book = new BookService();
+	BookService bookService;
 	JButton cal;
 	private JButton reservation ;
 	
@@ -40,6 +40,7 @@ public class BookFrame extends JFrame implements ActionListener{
 		initData();
 		setInitLayout();
 		addActionListener();
+		this.bookService = BookService.getInstance();
 	}
 
 	private void initData() {
@@ -103,7 +104,7 @@ public class BookFrame extends JFrame implements ActionListener{
 		if(e.getSource() == cal) {
 			new CalendarFrame(this);
 		}else if (e.getSource() == reservation) {
-			book.book(this);
+			bookService.book(this);
 			
 		}
 		

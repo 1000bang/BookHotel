@@ -75,6 +75,7 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 		initData();
 		setInitLayout();
 		addActionListener();
+		this.bookService = BookService.getInstance();
 	}
 
 	private void initData() {
@@ -104,7 +105,6 @@ public class RoomUpdateFrame extends JFrame implements ActionListener {
 
 		warningMain = new JLabel(" * 조회할 때는 방의 고유번호만 입력하세요 ");
 		warningMain_2 = new JLabel(" * 업데이트할 때는 고유번호와 호텔번호를 수정할 수 없습니다.");
-		bookService = new BookService();
 	}
 
 	private void setInitLayout() {

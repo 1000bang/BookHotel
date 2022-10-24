@@ -6,13 +6,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import bookHotel.Frame.BookFrame;
 import bookHotel.Frame.HotelUpdateFrame;
 import bookHotel.Frame.JoinFrame;
-import bookHotel.Frame.LoginFrame;
-import bookHotel.Frame.MainPageFrame;
+import bookHotel.Frame.MainFrame;
+import bookHotel.Frame.UserHomeFrame;
 import bookHotel.Frame.MasterFrame;
 import bookHotel.Frame.RoomUpdateFrame;
 import bookHotel.Frame.SearchBookFrame;
@@ -29,20 +31,31 @@ public class BookService implements IBookService {
 	private DBHelper dbHelper;
 	private PreparedStatement psmt;
 	private ResultSet rs;
-	private LoginUserInfo loginuserino;
+	private LoginUserInfo loginUserInfo;
 
+	public static BookService  instance = new BookService();
+	
+	public static BookService getInstance() {
+		return instance;
+	}
+	
+	
 	public BookService() {
 		this.dbHelper = DBHelper.getInstance();
-		this.loginuserino = LoginUserInfo.getInstance();
+		this.loginUserInfo = LoginUserInfo.getInstance();
 	}
 
 	// 메인프레임 호텔이미지와 북프레임 연결
-	public void setHotelName(MainPageFrame main) {
+	public void setHotelName(UserHomeFrame main) {
 		String sql = "select hotelName \n" + "from hotel\n" + "where image = ?";
 		try {
 
 			psmt = dbHelper.getConnection().prepareStatement(sql);
-			psmt.setString(1, main.getHotelPanelMain().getIcon().toString());
+			if(main.isFlag() == true) {
+				psmt.setString(1, main.getHotelPanelMain().getIcon().toString());
+			}else {
+			psmt.setString(1, main.getHotelPanelMainB().getIcon().toString());
+			}
 			rs = psmt.executeQuery();
 
 			if (rs.next()) {
@@ -70,7 +83,7 @@ public class BookService implements IBookService {
 
 	@Override
 	// 로그인프레임 아이디 비밀번호
-	public void selectLoginInfo(LoginFrame loginFrame, LoginUserInfo userInfo) {
+	public void selectLoginInfo(MainFrame loginFrame, LoginUserInfo userInfo) {
 
 		String sql = "SELECT * FROM userinfo where Id = ?  and password = ? ";
 
@@ -96,7 +109,7 @@ public class BookService implements IBookService {
 					JOptionPane.showMessageDialog(loginFrame, "관리자 계정으로 로그인합니다.");
 				} else {
 					loginFrame.dispose();
-					new MainPageFrame();
+					new UserHomeFrame();
 					JOptionPane.showMessageDialog(loginFrame, "로그인 성공.");
 				}
 
@@ -154,7 +167,7 @@ public class BookService implements IBookService {
 		List<String> bookList = new ArrayList<>();
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(query1);
-			psmt.setString(1, loginuserino.userNo);
+			psmt.setString(1, loginUserInfo.userNo);
 			rs = psmt.executeQuery();
 
 			while (rs.next()) {
@@ -207,7 +220,7 @@ public class BookService implements IBookService {
 			psmt.setInt(1, lastNo + 1);
 			psmt.setInt(2, Integer.parseInt(book.getRoomNameText().getText()));
 			psmt.setInt(3, hotelNo);
-			psmt.setInt(4, Integer.parseInt(loginuserino.userNo));
+			psmt.setInt(4, Integer.parseInt(loginUserInfo.userNo));
 			psmt.setString(5, book.getReservationDate().getText());
 			System.out.println(psmt.toString());
 			psmt.executeUpdate();
@@ -644,7 +657,7 @@ public class BookService implements IBookService {
 
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(sql);
-			psmt.setString(1, loginuserino.userNo);
+			psmt.setString(1, loginUserInfo.userNo);
 			rs = psmt.executeQuery();
 			while (rs.next()) {
 
@@ -652,6 +665,7 @@ public class BookService implements IBookService {
 
 			}
 		} catch (SQLException e) {
+			
 			e.printStackTrace();
 		} finally {
 			closeAll();
@@ -668,7 +682,7 @@ public class BookService implements IBookService {
 
 		try {
 			psmt = dbHelper.getConnection().prepareStatement(sql);
-			psmt.setString(1, loginuserino.userNo);
+			psmt.setString(1, loginUserInfo.userNo);
 			rs = psmt.executeQuery();
 			while (rs.next()) {
 				listH.add(rs.getString("hotelName"));

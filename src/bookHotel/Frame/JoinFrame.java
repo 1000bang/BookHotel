@@ -54,7 +54,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 		initData();
 		setInitLayout();
 		addActionListener();
-
+		this.bookService = BookService.getInstance();
 	}
 
 	public RoundedTextField getIdText() {
@@ -131,7 +131,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 		warningPw = new JLabel("* 비밀번호는 5글자 이상 적어주세요. ");
 		warningpwCheck = new JLabel("* 비밀번호와 일치하게 적어주세요. ");
 		warningName = new JLabel("* 이름을 필수 값입니다.  ");
-		bookService = new BookService();
+		
 	}
 
 	private void setInitLayout() {
@@ -206,7 +206,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 							// insert 메서드 호 출
 							bookService.signIn(this);
 							dispose();
-							new LoginFrame();
+							new MainFrame();
 						}
 					}
 				}
@@ -214,7 +214,7 @@ public class JoinFrame extends JFrame implements ActionListener {
 		} // end of join if
 		else if (e.getSource() == goBack) {
 			dispose();
-			new LoginFrame();
+			new MainFrame();
 		}
 	}
 

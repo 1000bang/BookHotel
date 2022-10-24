@@ -5,7 +5,7 @@ import java.util.List;
 import bookHotel.Frame.BookFrame;
 import bookHotel.Frame.HotelUpdateFrame;
 import bookHotel.Frame.JoinFrame;
-import bookHotel.Frame.LoginFrame;
+import bookHotel.Frame.MainFrame;
 import bookHotel.Frame.RoomUpdateFrame;
 import bookHotel.Frame.SearchBookFrame;
 import bookHotel.dto.LoginUserInfo;
@@ -36,7 +36,7 @@ public interface IBookService {
 	// 유저고유번호로 (유저번호, 유저이름, 전화번호, 생년월일) (1행)
 	void userInfoSearchByUserNo(SearchBookFrame searchBookFrame);
 
-	void selectLoginInfo(LoginFrame login, LoginUserInfo userInfo);
+	void selectLoginInfo(MainFrame login, LoginUserInfo userInfo);
 
 	// 호텔 정보 저장하기
 	boolean insertHotelInfo(HotelUpdateFrame hotel);

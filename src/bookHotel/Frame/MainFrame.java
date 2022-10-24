@@ -28,7 +28,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame implements ActionListener {
 	private JLabel logo;
 	private JLabel idLabel;
 	private JLabel passWord;
@@ -39,14 +39,14 @@ public class LoginFrame extends JFrame implements ActionListener {
 	private RoundedTextField id;
 	private RoundedPass pw;
 	BookService bookService;
-	LoginUserInfo userInfo;
+	//LoginUserInfo userInfo;
 
  
-	public LoginFrame() { 
+	public MainFrame() { 
 		initData();
 		setInitLayout();
 		addActionListener();
-		this.userInfo = LoginUserInfo.getInstance();
+		this.bookService = BookService.getInstance();
 	}
 
 	private void initData() {
@@ -109,7 +109,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 		 *
 		*/
 		if (e.getSource() == logIn) {
-			bookService.selectLoginInfo(this, userInfo);		
+			bookService.selectLoginInfo(this, bookService.getLoginUserInfo());		
 		} else if (e.getSource() == join) {
 			dispose();
 			new JoinFrame();
@@ -126,7 +126,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new LoginFrame();
+		new MainFrame();
 
 
 	}

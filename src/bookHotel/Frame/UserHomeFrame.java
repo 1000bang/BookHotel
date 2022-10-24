@@ -49,7 +49,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MainPageFrame extends JFrame implements ActionListener {
+public class UserHomeFrame extends JFrame implements ActionListener {
 	private JLabel logo;
 
 	private JPanel panel;
@@ -103,16 +103,18 @@ public class MainPageFrame extends JFrame implements ActionListener {
 	private ImageIcon hotelPanel6;
 	private ImageIcon hotelPanel7;
 	private ImageIcon hotelPanel8;
-	LoginUserInfo loginuserino;
+//	LoginUserInfo loginUserInfo;
 	int j = 0;
-	BookService bookService = new BookService();
+	boolean flag = true;
+	
+	BookService bookService;
 
 
-	public MainPageFrame() {
+	public UserHomeFrame() {
 		initData();
 		setInitLayout();
 		addActionListener();
-		this.loginuserino = LoginUserInfo.getInstance();
+		this.bookService = BookService.getInstance();
 
 	}
 
@@ -297,19 +299,25 @@ public class MainPageFrame extends JFrame implements ActionListener {
 
 		} else if (e.getSource() == logout) {
 			dispose();
-			new LoginFrame();
+			new MainFrame();
 		} else if (e.getSource() == hotel) {
 			hotelVisible(true);
 			reviewVisible(false);
 			userVisible(false);
 
 		} else if (e.getSource() == review) {
-			hotelVisible(false);
-			reviewVisible(true);
-			userVisible(false);
-			writerLabel_1.setText(loginuserino.userName);
-			contentsField.setText(rList.get(j));
-			hotelLabel_1.setText(hList.get(j));
+			try {
+				hotelVisible(false);
+				reviewVisible(true);
+				userVisible(false);
+				writerLabel_1.setText(bookService.getLoginUserInfo().userName);
+				contentsField.setText(rList.get(j));
+				hotelLabel_1.setText(hList.get(j));
+			} catch (Exception e2) {
+				contentsField.setText("리뷰없음");
+				hotelLabel_1.setText("");
+			}
+			
 
 		} else if (e.getSource() == reviewLeft) {
 			try {
@@ -317,6 +325,7 @@ public class MainPageFrame extends JFrame implements ActionListener {
 				hotelLabel_1.setText(hList.get(j));
 				contentsField.setText(rList.get(j));
 			} catch (Exception e2) {
+				j ++;
 				JOptionPane.showMessageDialog(this, "이전 글이 없습니다 .");
 			}
 
@@ -327,6 +336,7 @@ public class MainPageFrame extends JFrame implements ActionListener {
 				contentsField.setText(rList.get(j));
 				
 			} catch (Exception e2) {
+				j --;
 				JOptionPane.showMessageDialog(this, "다음 글이 없습니다 .");
 			}
 		}
@@ -345,15 +355,20 @@ public class MainPageFrame extends JFrame implements ActionListener {
 				}
 
 			}
-			userNoLabel.setText(loginuserino.userNo);
-			userIdLabel.setText(loginuserino.id);
-			userNameLabel.setText(loginuserino.userName);
-			userPhoneNumberLabel.setText(loginuserino.userPhoneNumber);
-			userBirth_Label.setText(loginuserino.useryear);
-
+			userNoLabel.setText(bookService.getLoginUserInfo().userNo);
+			userIdLabel.setText(bookService.getLoginUserInfo().id);
+			userNameLabel.setText(bookService.getLoginUserInfo().userName);
+			userPhoneNumberLabel.setText(bookService.getLoginUserInfo().userPhoneNumber);
+			userBirth_Label.setText(bookService.getLoginUserInfo().useryear);
+			
+			
+			// 같은 메서드를 활용하는데 flag true 면 panelMain 의 값을 가져오고 
+			// flag false면 panelMainB 의 값을 가져옴 
 		} else if (e.getSource() == hotelPanelMain) {
+			flag = true;
 			bookService.setHotelName(this);
 		} else if (e.getSource() == hotelPanelMainB) {
+			flag = false;
 			bookService.setHotelName(this);
 		}
 		repaint();

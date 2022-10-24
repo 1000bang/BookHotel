@@ -53,12 +53,13 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 	private RoundedButton delete;
 	private RoundedButton insert;
 	private JButton goBack;
-	BookService bookservice;
+	BookService bookService;
 
 	public HotelUpdateFrame() {
 		initData();
 		setInitLayout();
 		addActionListener();
+		this.bookService = BookService.getInstance();
 	}
 
 	private void initData() {
@@ -88,7 +89,6 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 
 		warningMain = new JLabel(" * 조회할 때는 호텔 이름만 입력하세요 ");
 		warningMain_2 = new JLabel(" * 업데이트할 때는 호텔 번호를 비워두세요 ");
-		bookservice = new BookService();
 	}
 
 	private void setInitLayout() {
@@ -150,15 +150,15 @@ public class HotelUpdateFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == search) {
 			// 호텔 이름으로 호텔 정보 조회하기 메서드 호출
-			bookservice.hotelInfoSearch(this);
+			bookService.hotelInfoSearch(this);
 		} // end of search button
 		else if (e.getSource() == update) {
-			bookservice.updateHotel(hotelNoText.getText(), hotelNameText.getText(), hotelAddressText.getText(),
+			bookService.updateHotel(hotelNoText.getText(), hotelNameText.getText(), hotelAddressText.getText(),
 					telPhoneText.getText(), this);
 		} else if (e.getSource() == delete) {
-			bookservice.deleteHotel(hotelNoText.getText(), this);
+			bookService.deleteHotel(hotelNoText.getText(), this);
 		} else if (e.getSource() == insert) {
-			bookservice.insertHotelInfo(this);
+			bookService.insertHotelInfo(this);
 		} else if (e.getSource() == goBack) {
 			dispose();
 			new MasterFrame();

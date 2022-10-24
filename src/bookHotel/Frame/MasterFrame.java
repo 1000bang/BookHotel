@@ -98,7 +98,7 @@ public class MasterFrame extends JFrame implements ActionListener {
 		
 		else if (e.getSource() == goBack) {
 			dispose();
-			new LoginFrame();
+			new MainFrame();
 		}
 
 	}
