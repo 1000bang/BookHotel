@@ -13,7 +13,7 @@ B-2조  - 천병재, 조지훈
 22-10-19 ~ 22-10-24
 
 ### ERD : 
-<img scr = 'https://user-images.githubusercontent.com/113667600/214869723-5fb3bb0a-c7c4-409d-a7ef-ab73619ba9bf.png' width = '400' height = '300' />
+<img src = 'https://user-images.githubusercontent.com/113667600/214869723-5fb3bb0a-c7c4-409d-a7ef-ab73619ba9bf.png' width = '600' height = '450' />
 
 ### 프로젝트 시연영상 :
 gif 를 클릭하면 원본 동영상으로 이동합니다. 
